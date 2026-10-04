@@ -45,7 +45,7 @@ export async function GET(
   const db = getDb();
   const rows = db
     .prepare(
-      `SELECT id, sender_id, body, created_at FROM dm_messages
+      `SELECT id, sender_id, body, media_url, media_type, created_at FROM dm_messages
        WHERE ((sender_id = :me AND recipient_id = :peer) OR (sender_id = :peer AND recipient_id = :me))
          AND id > :after
        ORDER BY id DESC LIMIT :page`,
@@ -54,12 +54,16 @@ export async function GET(
     id: number;
     sender_id: number;
     body: string;
+    media_url: string | null;
+    media_type: string | null;
     created_at: string;
   }[];
   const messages = rows.reverse().map((m) => ({
     id: m.id,
     mine: m.sender_id === user.id,
     body: m.body,
+    media_url: m.media_url,
+    media_type: m.media_type,
     created_at: m.created_at,
   }));
   const lastId = rows.length ? rows[rows.length - 1].id : 0;
@@ -90,13 +94,22 @@ export async function POST(
   if (!peer || peer.id === user.id) {
     return NextResponse.json({ error: "Unknown user" }, { status: 404 });
   }
-  const json = (await req.json().catch(() => null)) as { body?: string } | null;
+  const json = (await req.json().catch(() => null)) as {
+    body?: string;
+    media_url?: string;
+    media_type?: string;
+  } | null;
   const body = (json?.body ?? "").trim().slice(0, MAX_BODY);
-  if (body.length < 1) {
+  const mediaUrl =
+    typeof json?.media_url === "string" && json.media_url.startsWith("/uploads/chat/")
+      ? json.media_url.slice(0, 200)
+      : null;
+  const mediaType = mediaUrl ? (json?.media_type ?? "").slice(0, 60) : null;
+  if (!body && !mediaUrl) {
     return NextResponse.json({ error: "Empty message" }, { status: 400 });
   }
   const info = getDb()
-    .prepare("INSERT INTO dm_messages (sender_id, recipient_id, body) VALUES (?, ?, ?)")
-    .run(user.id, peer.id, body);
+    .prepare("INSERT INTO dm_messages (sender_id, recipient_id, body, media_url, media_type) VALUES (?, ?, ?, ?, ?)")
+    .run(user.id, peer.id, body, mediaUrl, mediaType);
   return NextResponse.json({ ok: true, id: Number(info.lastInsertRowid) });
 }

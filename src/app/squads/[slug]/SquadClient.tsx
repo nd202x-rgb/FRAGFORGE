@@ -3,11 +3,14 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { RoleBadge } from "@/components/RoleBadge";
+import { ChatMedia } from "@/components/ChatMedia";
 
 interface ChatMsg {
   id: number;
   username: string;
   body: string;
+  media_url?: string | null;
+  media_type?: string | null;
   created_at: string;
   avatar: string | null;
   pro?: number;
@@ -41,6 +44,8 @@ export function SquadClient({
   const [draft, setDraft] = useState("");
   const [callOpen, setCallOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
   const lastId = useRef(0);
   const bottomRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -81,24 +86,46 @@ export function SquadClient({
     }
   }, [messages, username]);
 
+  async function post(body: string, mediaUrl?: string, mediaType?: string) {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ room: slug, body, media_url: mediaUrl, media_type: mediaType }),
+    });
+    if (!res.ok) {
+      const json = await res.json().catch(() => ({}));
+      setError(json.error ?? "Failed to send");
+      return false;
+    }
+    return true;
+  }
+
   async function send(e: React.FormEvent) {
     e.preventDefault();
     const body = draft.trim();
     if (!body) return;
     setDraft("");
     setError(null);
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ room: slug, body }),
-    });
-    if (!res.ok) {
-      const json = await res.json().catch(() => ({}));
-      setError(json.error ?? "Failed to send");
+    if (!(await post(body))) {
       setDraft(body);
       return;
     }
     poll();
+  }
+
+  async function attach(file: File) {
+    setError(null);
+    setUploading(true);
+    const form = new FormData();
+    form.append("file", file);
+    const res = await fetch("/api/upload", { method: "POST", body: form });
+    setUploading(false);
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      setError(json.error ?? "Upload failed");
+      return;
+    }
+    if (await post("", json.url, json.type)) poll();
   }
 
   const jitsiRoom = `fragforge-${slug}`;
@@ -184,6 +211,7 @@ export function SquadClient({
                     }
                   >
                     {m.body}
+                    {m.media_url && <ChatMedia url={m.media_url} type={m.media_type ?? null} />}
                   </p>
                 </div>
               </div>
@@ -193,6 +221,27 @@ export function SquadClient({
         </div>
         {signedIn ? (
           <form onSubmit={send} className="flex items-center gap-2 border-t border-edge p-4">
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*,video/mp4,video/webm,audio/*,.pdf"
+              className="hidden"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) attach(f);
+                e.target.value = "";
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              disabled={uploading}
+              aria-label="Attach media"
+              title="Share image, video, audio or PDF"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-edge text-sm text-mist transition-colors hover:border-neon hover:text-white disabled:opacity-50"
+            >
+              {uploading ? "…" : "📎"}
+            </button>
             <input
               value={draft}
               onChange={(e) => setDraft(e.target.value)}

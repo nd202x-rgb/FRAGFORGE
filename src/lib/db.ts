@@ -59,6 +59,29 @@ export function getDb(): DatabaseSync {
         last_read_id INTEGER NOT NULL DEFAULT 0,
         PRIMARY KEY (reader_id, peer_id)
       );
+      CREATE TABLE IF NOT EXISTS chat_groups (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        created_by INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        created_at TEXT NOT NULL DEFAULT (datetime('now'))
+      );
+      CREATE TABLE IF NOT EXISTS group_members (
+        group_id INTEGER NOT NULL REFERENCES chat_groups(id) ON DELETE CASCADE,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        joined_at TEXT NOT NULL DEFAULT (datetime('now')),
+        PRIMARY KEY (group_id, user_id)
+      );
+      CREATE TABLE IF NOT EXISTS group_messages (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        group_id INTEGER NOT NULL REFERENCES chat_groups(id) ON DELETE CASCADE,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        username TEXT NOT NULL,
+        body TEXT NOT NULL DEFAULT '',
+        media_url TEXT,
+        media_type TEXT,
+        created_at TEXT NOT NULL DEFAULT (datetime('now'))
+      );
+      CREATE INDEX IF NOT EXISTS idx_group_msgs ON group_messages (group_id, id);
     `);
     try {
       db.exec("ALTER TABLE users ADD COLUMN pro INTEGER NOT NULL DEFAULT 0");
@@ -79,6 +102,15 @@ export function getDb(): DatabaseSync {
       db.exec("ALTER TABLE users ADD COLUMN role TEXT NOT NULL DEFAULT 'member'");
     } catch {
       /* column already exists */
+    }
+    for (const table of ["chat_messages", "dm_messages"]) {
+      for (const col of ["media_url TEXT", "media_type TEXT"]) {
+        try {
+          db.exec(`ALTER TABLE ${table} ADD COLUMN ${col}`);
+        } catch {
+          /* column already exists */
+        }
+      }
     }
     // Site owner account — always OWNER role + PRO access.
     db.exec("UPDATE users SET role = 'owner', pro = 1 WHERE email = 'nd202x@gmail.com'");

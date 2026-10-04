@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { answerQuery } from "@/lib/assistant";
+import { llmReply } from "@/lib/llm";
 
 export async function POST(req: Request) {
   const user = await getCurrentUser();
@@ -16,8 +17,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Empty message" }, { status: 400 });
   }
   try {
-    const result = await answerQuery(message);
-    return NextResponse.json(result);
+    // Retrieval engine gives site links + grounding context for the LLM.
+    const retrieval = await answerQuery(message);
+    const llm = await llmReply(message, retrieval.reply);
+    if (llm) {
+      return NextResponse.json({ reply: llm, links: retrieval.links, ai: true });
+    }
+    return NextResponse.json(retrieval);
   } catch (e) {
     console.error("assistant error", e);
     return NextResponse.json(
