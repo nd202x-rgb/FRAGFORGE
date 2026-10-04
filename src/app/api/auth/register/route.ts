@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
-import { createSession, hashPassword, setSessionCookie } from "@/lib/auth";
+import { createSession, hashPassword, isSecureRequest, setSessionCookie } from "@/lib/auth";
 
 const schema = z.object({
   email: z.string().email().max(200),
@@ -36,6 +36,6 @@ export async function POST(req: Request) {
     .run(email, username, hashPassword(password));
   const userId = Number(result.lastInsertRowid);
   const { token, expiresAt } = createSession(userId);
-  await setSessionCookie(token, expiresAt);
+  await setSessionCookie(token, expiresAt, isSecureRequest(req));
   return NextResponse.json({ data: { id: userId, email, username } });
 }

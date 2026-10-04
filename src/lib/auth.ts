@@ -34,14 +34,25 @@ export function createSession(userId: number): { token: string; expiresAt: Date 
   return { token, expiresAt };
 }
 
-export async function setSessionCookie(token: string, expiresAt: Date): Promise<void> {
+export function isSecureRequest(req: Request): boolean {
+  return (
+    req.headers.get("x-forwarded-proto") === "https" ||
+    new URL(req.url).protocol === "https:"
+  );
+}
+
+export async function setSessionCookie(
+  token: string,
+  expiresAt: Date,
+  secure: boolean,
+): Promise<void> {
   const jar = await cookies();
   jar.set(SESSION_COOKIE, token, {
     httpOnly: true,
     sameSite: "lax",
     path: "/",
     expires: expiresAt,
-    secure: process.env.NODE_ENV === "production",
+    secure,
   });
 }
 

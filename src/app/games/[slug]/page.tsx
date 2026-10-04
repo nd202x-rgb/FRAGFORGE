@@ -3,8 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GAME_BY_SLUG, GAMES } from "@/lib/games";
 import { loadGameContent } from "@/lib/content";
+import { getCurrentUser } from "@/lib/auth";
 import { Reveal } from "@/components/Reveal";
 import { TechniqueCard } from "@/components/TechniqueCard";
+
+export const dynamic = "force-dynamic";
 
 export function generateStaticParams() {
   return GAMES.map((g) => ({ slug: g.slug }));
@@ -21,7 +24,8 @@ export default async function GamePage(props: PageProps<"/games/[slug]">) {
   const { slug } = await props.params;
   const game = GAME_BY_SLUG.get(slug);
   if (!game) notFound();
-  const content = await loadGameContent(slug);
+  const user = await getCurrentUser();
+  const content = user ? await loadGameContent(slug) : null;
 
   return (
     <div>
@@ -101,7 +105,29 @@ export default async function GamePage(props: PageProps<"/games/[slug]">) {
           </section>
         </Reveal>
 
-        {!content ? (
+        {!user ? (
+          <div className="panel mx-auto max-w-lg p-10 text-center">
+            <h2 className="text-2xl font-extrabold">Members-only guide</h2>
+            <p className="mt-2 text-mist">
+              Sign in to unlock {game.name} pro techniques, PvP strategies,
+              drills and pro settings — free forever.
+            </p>
+            <div className="mt-6 flex justify-center gap-3">
+              <Link
+                href={`/login?next=/games/${game.slug}`}
+                className="rounded-lg bg-neon px-6 py-2.5 text-sm font-bold text-void"
+              >
+                Sign in
+              </Link>
+              <Link
+                href={`/register?next=/games/${game.slug}`}
+                className="rounded-lg border border-edge bg-white/[0.05] px-6 py-2.5 text-sm font-bold hover:bg-white/[0.1]"
+              >
+                Join free
+              </Link>
+            </div>
+          </div>
+        ) : !content ? (
           <div className="panel p-10 text-center">
             <h2 className="text-xl font-bold">Guide incoming</h2>
             <p className="mt-2 text-mist">

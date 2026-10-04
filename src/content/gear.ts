@@ -5,6 +5,8 @@ export interface GearItem {
   why: string; // why players pick it
   amazon: string; // amazon search URL
   aliexpress: string; // aliexpress search URL
+  daraz: string; // daraz search URL
+  alibaba: string; // alibaba search URL
 }
 
 export interface GearCategory {
@@ -16,6 +18,8 @@ export interface GearCategory {
 
 const amz = (q: string) => `https://www.amazon.com/s?k=${encodeURIComponent(q)}`;
 const ali = (q: string) => `https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(q)}`;
+const dar = (q: string) => `https://www.daraz.com.pk/catalog/?q=${encodeURIComponent(q)}`;
+const alb = (q: string) => `https://www.alibaba.com/trade/search?SearchText=${encodeURIComponent(q)}`;
 
 export const GEAR: GearCategory[] = [
   {
@@ -23,11 +27,11 @@ export const GEAR: GearCategory[] = [
     title: "Gaming mice",
     blurb: "The single biggest aim upgrade. Sub-65g wireless is the pro standard.",
     items: [
-      { name: "Logitech G Pro X Superlight 2", price: "$159", tier: "pro", why: "The most-used mouse in pro Valorant and CS — 60g, HERO 2 sensor, flawless wireless.", amazon: amz("Logitech G Pro X Superlight 2"), aliexpress: ali("Logitech G Pro X Superlight 2") },
-      { name: "Razer Viper V3 Pro", price: "$159", tier: "pro", why: "54g symmetrical shape, 8KHz polling, Focus Pro 35K sensor — Faker and CS pros run it.", amazon: amz("Razer Viper V3 Pro"), aliexpress: ali("Razer Viper V3 Pro") },
-      { name: "ZOWIE EC2-CW", price: "$139", tier: "pro", why: "The CS:GO/CS2 pro classic — ergonomic shell, no software needed, 3360-grade sensor.", amazon: amz("ZOWIE EC2-CW"), aliexpress: ali("ZOWIE EC2-CW") },
-      { name: "VXE Dragonfly R1 Pro", price: "$30–40", tier: "budget", why: "AliExpress favorite — PAW3395 sensor and 49g shell at a quarter of flagship price.", amazon: amz("VXE Dragonfly R1 Pro"), aliexpress: ali("VXE Dragonfly R1 Pro") },
-      { name: "Attack Shark X3", price: "$25–30", tier: "budget", why: "PAW3395 sensor, tri-mode wireless, ~49g — the cheapest true 'flagship sensor' mouse.", amazon: amz("Attack Shark X3 mouse"), aliexpress: ali("Attack Shark X3") },
+      { name: "Logitech G Pro X Superlight 2", price: "$159", tier: "pro", why: "The most-used mouse in pro Valorant and CS — 60g, HERO 2 sensor, flawless wireless.", amazon: amz("Logitech G Pro X Superlight 2"), aliexpress: ali("Logitech G Pro X Superlight 2"), daraz: dar("Logitech G Pro X Superlight 2"), alibaba: alb("Logitech G Pro X Superlight 2") },
+      { name: "Razer Viper V3 Pro", price: "$159", tier: "pro", why: "54g symmetrical shape, 8KHz polling, Focus Pro 35K sensor — Faker and CS pros run it.", amazon: amz("Razer Viper V3 Pro"), aliexpress: ali("Razer Viper V3 Pro"), daraz: dar("Razer Viper V3 Pro"), alibaba: alb("Razer Viper V3 Pro") },
+      { name: "ZOWIE EC2-CW", price: "$139", tier: "pro", why: "The CS:GO/CS2 pro classic — ergonomic shell, no software needed, 3360-grade sensor.", amazon: amz("ZOWIE EC2-CW"), aliexpress: ali("ZOWIE EC2-CW"), daraz: dar("ZOWIE EC2-CW"), alibaba: alb("ZOWIE EC2-CW") },
+      { name: "VXE Dragonfly R1 Pro", price: "$30–40", tier: "budget", why: "AliExpress favorite — PAW3395 sensor and 49g shell at a quarter of flagship price.", amazon: amz("VXE Dragonfly R1 Pro"), aliexpress: ali("VXE Dragonfly R1 Pro"), daraz: dar("VXE Dragonfly R1 Pro"), alibaba: alb("VXE Dragonfly R1 Pro") },
+      { name: "Attack Shark X3", price: "$25–30", tier: "budget", why: "PAW3395 sensor, tri-mode wireless, ~49g — the cheapest true 'flagship sensor' mouse.", amazon: amz("Attack Shark X3 mouse"), aliexpress: ali("Attack Shark X3"), daraz: dar("Attack Shark X3 mouse"), alibaba: alb("Attack Shark X3") },
     ],
   },
   {
@@ -35,11 +39,11 @@ export const GEAR: GearCategory[] = [
     title: "Keyboards",
     blurb: "Hall-effect rapid trigger is the 2025/26 competitive standard for FPS and fighters.",
     items: [
-      { name: "Wooting 60HE+", price: "$175", tier: "pro", why: "Rapid trigger + adjustable actuation made it the default keyboard of pro Valorant.", amazon: amz("Wooting 60HE"), aliexpress: ali("Wooting 60HE") },
-      { name: "Razer Huntsman V3 Pro TKL", price: "$220", tier: "pro", why: "Analog optical switches with rapid trigger; TKL layout favored by CS and Fortnite pros.", amazon: amz("Razer Huntsman V3 Pro TKL"), aliexpress: ali("Razer Huntsman V3 Pro") },
-      { name: "SteelSeries Apex Pro TKL Gen 3", price: "$220", tier: "mid", why: "OmniPoint 3.0 adjustable switches, OLED smart display, esports-grade build.", amazon: amz("SteelSeries Apex Pro TKL Gen 3"), aliexpress: ali("SteelSeries Apex Pro TKL") },
-      { name: "Aula F75", price: "$45", tier: "budget", why: "Gasket-mount 75% that punches way above its price — the AliExpress community darling.", amazon: amz("Aula F75 keyboard"), aliexpress: ali("Aula F75") },
-      { name: "Monsgeek FUN60 Ultra", price: "$50–60", tier: "budget", why: "Hall-effect rapid trigger under $60 — Wooting features on an AliExpress budget.", amazon: amz("Monsgeek FUN60"), aliexpress: ali("Monsgeek FUN60") },
+      { name: "Wooting 60HE+", price: "$175", tier: "pro", why: "Rapid trigger + adjustable actuation made it the default keyboard of pro Valorant.", amazon: amz("Wooting 60HE"), aliexpress: ali("Wooting 60HE"), daraz: dar("Wooting 60HE"), alibaba: alb("Wooting 60HE") },
+      { name: "Razer Huntsman V3 Pro TKL", price: "$220", tier: "pro", why: "Analog optical switches with rapid trigger; TKL layout favored by CS and Fortnite pros.", amazon: amz("Razer Huntsman V3 Pro TKL"), aliexpress: ali("Razer Huntsman V3 Pro"), daraz: dar("Razer Huntsman V3 Pro TKL"), alibaba: alb("Razer Huntsman V3 Pro") },
+      { name: "SteelSeries Apex Pro TKL Gen 3", price: "$220", tier: "mid", why: "OmniPoint 3.0 adjustable switches, OLED smart display, esports-grade build.", amazon: amz("SteelSeries Apex Pro TKL Gen 3"), aliexpress: ali("SteelSeries Apex Pro TKL"), daraz: dar("SteelSeries Apex Pro TKL Gen 3"), alibaba: alb("SteelSeries Apex Pro TKL") },
+      { name: "Aula F75", price: "$45", tier: "budget", why: "Gasket-mount 75% that punches way above its price — the AliExpress community darling.", amazon: amz("Aula F75 keyboard"), aliexpress: ali("Aula F75"), daraz: dar("Aula F75 keyboard"), alibaba: alb("Aula F75") },
+      { name: "Monsgeek FUN60 Ultra", price: "$50–60", tier: "budget", why: "Hall-effect rapid trigger under $60 — Wooting features on an AliExpress budget.", amazon: amz("Monsgeek FUN60"), aliexpress: ali("Monsgeek FUN60"), daraz: dar("Monsgeek FUN60"), alibaba: alb("Monsgeek FUN60") },
     ],
   },
   {
@@ -47,10 +51,10 @@ export const GEAR: GearCategory[] = [
     title: "Monitors",
     blurb: "240Hz+ is the competitive floor; OLED is the new endgame.",
     items: [
-      { name: "ZOWIE XL2546K 240Hz", price: "$430–500", tier: "pro", why: "The LAN standard in CS2 — DyAc+ backlight strobing gives the clearest motion in esports.", amazon: amz("ZOWIE XL2546K"), aliexpress: ali("ZOWIE XL2546K") },
-      { name: "ASUS ROG Swift OLED PG27AQDM", price: "$750", tier: "pro", why: "27\" 240Hz OLED — near-zero response time, the streamer/pro hybrid pick.", amazon: amz("ASUS ROG PG27AQDM"), aliexpress: ali("ASUS PG27AQDM") },
-      { name: "Alienware AW2524H 500Hz", price: "$650", tier: "mid", why: "500Hz IPS for the highest refresh competitive play in Valorant/CS2.", amazon: amz("Alienware AW2524H"), aliexpress: ali("Alienware AW2524H") },
-      { name: "KOORUI 24\" 180Hz (GN01)", price: "$110–130", tier: "budget", why: "Fast IPS 180Hz at entry price — the best budget ticket into high-refresh gaming.", amazon: amz("KOORUI 24 inch 180Hz monitor"), aliexpress: ali("KOORUI 180Hz monitor") },
+      { name: "ZOWIE XL2546K 240Hz", price: "$430–500", tier: "pro", why: "The LAN standard in CS2 — DyAc+ backlight strobing gives the clearest motion in esports.", amazon: amz("ZOWIE XL2546K"), aliexpress: ali("ZOWIE XL2546K"), daraz: dar("ZOWIE XL2546K"), alibaba: alb("ZOWIE XL2546K") },
+      { name: "ASUS ROG Swift OLED PG27AQDM", price: "$750", tier: "pro", why: "27\" 240Hz OLED — near-zero response time, the streamer/pro hybrid pick.", amazon: amz("ASUS ROG PG27AQDM"), aliexpress: ali("ASUS PG27AQDM"), daraz: dar("ASUS ROG PG27AQDM"), alibaba: alb("ASUS PG27AQDM") },
+      { name: "Alienware AW2524H 500Hz", price: "$650", tier: "mid", why: "500Hz IPS for the highest refresh competitive play in Valorant/CS2.", amazon: amz("Alienware AW2524H"), aliexpress: ali("Alienware AW2524H"), daraz: dar("Alienware AW2524H"), alibaba: alb("Alienware AW2524H") },
+      { name: "KOORUI 24\" 180Hz (GN01)", price: "$110–130", tier: "budget", why: "Fast IPS 180Hz at entry price — the best budget ticket into high-refresh gaming.", amazon: amz("KOORUI 24 inch 180Hz monitor"), aliexpress: ali("KOORUI 180Hz monitor"), daraz: dar("KOORUI 24 inch 180Hz monitor"), alibaba: alb("KOORUI 180Hz monitor") },
     ],
   },
   {
@@ -58,10 +62,10 @@ export const GEAR: GearCategory[] = [
     title: "Headsets & audio",
     blurb: "Footsteps win rounds. Closed-back imaging beats raw bass.",
     items: [
-      { name: "Logitech G Pro X 2 Lightspeed", price: "$249", tier: "pro", why: "Graphene drivers, wireless + Bluetooth, the headset most worn at VCT and BLAST events.", amazon: amz("Logitech G Pro X 2"), aliexpress: ali("Logitech G Pro X 2") },
-      { name: "SteelSeries Arctis Nova Pro", price: "$350", tier: "pro", why: "Hi-res drivers with a dedicated DAC — imaging tuned for footsteps and utility cues.", amazon: amz("SteelSeries Arctis Nova Pro"), aliexpress: ali("Arctis Nova Pro") },
-      { name: "HyperX Cloud III", price: "$99", tier: "mid", why: "The value king for a decade — comfortable, durable, clean positional audio.", amazon: amz("HyperX Cloud III"), aliexpress: ali("HyperX Cloud III") },
-      { name: "KZ x Crinacle IEM (in-ear)", price: "$25–40", tier: "budget", why: "Audiophile IEMs give better imaging than most gaming headsets under $150.", amazon: amz("KZ Crinacle IEM"), aliexpress: ali("KZ Crinacle IEM") },
+      { name: "Logitech G Pro X 2 Lightspeed", price: "$249", tier: "pro", why: "Graphene drivers, wireless + Bluetooth, the headset most worn at VCT and BLAST events.", amazon: amz("Logitech G Pro X 2"), aliexpress: ali("Logitech G Pro X 2"), daraz: dar("Logitech G Pro X 2"), alibaba: alb("Logitech G Pro X 2") },
+      { name: "SteelSeries Arctis Nova Pro", price: "$350", tier: "pro", why: "Hi-res drivers with a dedicated DAC — imaging tuned for footsteps and utility cues.", amazon: amz("SteelSeries Arctis Nova Pro"), aliexpress: ali("Arctis Nova Pro"), daraz: dar("SteelSeries Arctis Nova Pro"), alibaba: alb("Arctis Nova Pro") },
+      { name: "HyperX Cloud III", price: "$99", tier: "mid", why: "The value king for a decade — comfortable, durable, clean positional audio.", amazon: amz("HyperX Cloud III"), aliexpress: ali("HyperX Cloud III"), daraz: dar("HyperX Cloud III"), alibaba: alb("HyperX Cloud III") },
+      { name: "KZ x Crinacle IEM (in-ear)", price: "$25–40", tier: "budget", why: "Audiophile IEMs give better imaging than most gaming headsets under $150.", amazon: amz("KZ Crinacle IEM"), aliexpress: ali("KZ Crinacle IEM"), daraz: dar("KZ Crinacle IEM"), alibaba: alb("KZ Crinacle IEM") },
     ],
   },
   {
@@ -69,9 +73,9 @@ export const GEAR: GearCategory[] = [
     title: "Full PC builds",
     blurb: "Complete performance targets — build it yourself or match a prebuilt.",
     items: [
-      { name: "Pro build — 360+ fps competitive", price: "~$2,200", tier: "pro", why: "Ryzen 7 9800X3D + RTX 5070 Ti + 32GB DDR5-6000 + 2TB Gen4 NVMe. Locks 240–400fps at 1440p in Valorant/CS2/Warzone with pristine 1% lows.", amazon: amz("9800X3D RTX 5070 Ti gaming PC"), aliexpress: ali("9800X3D gaming pc") },
-      { name: "Mid build — 144–240fps sweet spot", price: "~$1,200", tier: "mid", why: "Ryzen 5 7600 + RTX 5070/RX 9070 + 32GB DDR5 + 1TB NVMe. The value sweet spot — high-refresh in every competitive title.", amazon: amz("Ryzen 5 7600 RTX 5070 gaming PC"), aliexpress: ali("RTX 5070 gaming pc") },
-      { name: "Budget build — 1080p high-refresh", price: "~$650", tier: "budget", why: "Ryzen 5 5600/Core i5-12400F + RX 6600/RTX 4060 + 16GB DDR4 + 500GB NVMe. 144+ fps in Valorant, CS2, LoL, Fortnite performance mode.", amazon: amz("RX 6600 gaming pc build"), aliexpress: ali("RX 6600 gaming pc") },
+      { name: "Pro build — 360+ fps competitive", price: "~$2,200", tier: "pro", why: "Ryzen 7 9800X3D + RTX 5070 Ti + 32GB DDR5-6000 + 2TB Gen4 NVMe. Locks 240–400fps at 1440p in Valorant/CS2/Warzone with pristine 1% lows.", amazon: amz("9800X3D RTX 5070 Ti gaming PC"), aliexpress: ali("9800X3D gaming pc"), daraz: dar("9800X3D RTX 5070 Ti gaming PC"), alibaba: alb("9800X3D gaming pc") },
+      { name: "Mid build — 144–240fps sweet spot", price: "~$1,200", tier: "mid", why: "Ryzen 5 7600 + RTX 5070/RX 9070 + 32GB DDR5 + 1TB NVMe. The value sweet spot — high-refresh in every competitive title.", amazon: amz("Ryzen 5 7600 RTX 5070 gaming PC"), aliexpress: ali("RTX 5070 gaming pc"), daraz: dar("Ryzen 5 7600 RTX 5070 gaming PC"), alibaba: alb("RTX 5070 gaming pc") },
+      { name: "Budget build — 1080p high-refresh", price: "~$650", tier: "budget", why: "Ryzen 5 5600/Core i5-12400F + RX 6600/RTX 4060 + 16GB DDR4 + 500GB NVMe. 144+ fps in Valorant, CS2, LoL, Fortnite performance mode.", amazon: amz("RX 6600 gaming pc build"), aliexpress: ali("RX 6600 gaming pc"), daraz: dar("RX 6600 gaming pc build"), alibaba: alb("RX 6600 gaming pc") },
     ],
   },
   {
@@ -79,10 +83,10 @@ export const GEAR: GearCategory[] = [
     title: "Gaming laptops",
     blurb: "Portable performance — look for a 240Hz-class panel and a 4070-class GPU.",
     items: [
-      { name: "ASUS ROG Zephyrus G14 (2025)", price: "$1,600", tier: "pro", why: "OLED 120Hz+, RTX 50-series in 1.5kg — the laptop pros travel with.", amazon: amz("ASUS ROG Zephyrus G14"), aliexpress: ali("ROG Zephyrus G14") },
-      { name: "Lenovo Legion Pro 5", price: "$1,400", tier: "mid", why: "RTX 5070 + 240Hz display — the best fps-per-dollar gaming laptop.", amazon: amz("Lenovo Legion Pro 5"), aliexpress: ali("Lenovo Legion Pro 5") },
-      { name: "ASUS TUF Gaming A15", price: "$1,000", tier: "mid", why: "RTX 4060 + 144Hz in a tough chassis — the reliable mid-range workhorse.", amazon: amz("ASUS TUF Gaming A15"), aliexpress: ali("ASUS TUF A15") },
-      { name: "Acer Nitro V 15", price: "$750", tier: "budget", why: "RTX 4050/4060 entry machine — runs Valorant/CS2 at high refresh on a budget.", amazon: amz("Acer Nitro V 15"), aliexpress: ali("Acer Nitro V 15") },
+      { name: "ASUS ROG Zephyrus G14 (2025)", price: "$1,600", tier: "pro", why: "OLED 120Hz+, RTX 50-series in 1.5kg — the laptop pros travel with.", amazon: amz("ASUS ROG Zephyrus G14"), aliexpress: ali("ROG Zephyrus G14"), daraz: dar("ASUS ROG Zephyrus G14"), alibaba: alb("ROG Zephyrus G14") },
+      { name: "Lenovo Legion Pro 5", price: "$1,400", tier: "mid", why: "RTX 5070 + 240Hz display — the best fps-per-dollar gaming laptop.", amazon: amz("Lenovo Legion Pro 5"), aliexpress: ali("Lenovo Legion Pro 5"), daraz: dar("Lenovo Legion Pro 5"), alibaba: alb("Lenovo Legion Pro 5") },
+      { name: "ASUS TUF Gaming A15", price: "$1,000", tier: "mid", why: "RTX 4060 + 144Hz in a tough chassis — the reliable mid-range workhorse.", amazon: amz("ASUS TUF Gaming A15"), aliexpress: ali("ASUS TUF A15"), daraz: dar("ASUS TUF Gaming A15"), alibaba: alb("ASUS TUF A15") },
+      { name: "Acer Nitro V 15", price: "$750", tier: "budget", why: "RTX 4050/4060 entry machine — runs Valorant/CS2 at high refresh on a budget.", amazon: amz("Acer Nitro V 15"), aliexpress: ali("Acer Nitro V 15"), daraz: dar("Acer Nitro V 15"), alibaba: alb("Acer Nitro V 15") },
     ],
   },
   {
@@ -90,11 +94,11 @@ export const GEAR: GearCategory[] = [
     title: "PC parts",
     blurb: "Frames first: a strong CPU + GPU pairing keeps you above monitor refresh.",
     items: [
-      { name: "AMD Ryzen 7 9800X3D", price: "$479", tier: "pro", why: "The fastest gaming CPU — 3D V-Cache crushes 1% lows in CS2, Valorant and Warzone.", amazon: amz("Ryzen 7 9800X3D"), aliexpress: ali("Ryzen 9800X3D") },
-      { name: "NVIDIA RTX 5070 Ti", price: "$750", tier: "pro", why: "240+ fps at 1440p in every competitive title; DLSS 4 frame gen for single-player.", amazon: amz("RTX 5070 Ti"), aliexpress: ali("RTX 5070 Ti") },
-      { name: "32GB DDR5-6000 CL30 kit", price: "$110", tier: "mid", why: "The capacity/speed sweet spot for AM5 and modern builds — 1% lows love fast RAM.", amazon: amz("32GB DDR5 6000 CL30"), aliexpress: ali("32GB DDR5 6000") },
-      { name: "2TB Gen4 NVMe SSD", price: "$110", tier: "mid", why: "Load into rounds first — Warzone/Baldur's Gate 3 demand a fast SSD.", amazon: amz("2TB NVMe Gen4 SSD"), aliexpress: ali("2TB NVMe Gen4") },
-      { name: "RX 6600 8GB", price: "$180", tier: "budget", why: "The cheapest card that still pushes 144fps at 1080p low-med in esports titles.", amazon: amz("RX 6600 graphics card"), aliexpress: ali("RX 6600") },
+      { name: "AMD Ryzen 7 9800X3D", price: "$479", tier: "pro", why: "The fastest gaming CPU — 3D V-Cache crushes 1% lows in CS2, Valorant and Warzone.", amazon: amz("Ryzen 7 9800X3D"), aliexpress: ali("Ryzen 9800X3D"), daraz: dar("Ryzen 7 9800X3D"), alibaba: alb("Ryzen 9800X3D") },
+      { name: "NVIDIA RTX 5070 Ti", price: "$750", tier: "pro", why: "240+ fps at 1440p in every competitive title; DLSS 4 frame gen for single-player.", amazon: amz("RTX 5070 Ti"), aliexpress: ali("RTX 5070 Ti"), daraz: dar("RTX 5070 Ti"), alibaba: alb("RTX 5070 Ti") },
+      { name: "32GB DDR5-6000 CL30 kit", price: "$110", tier: "mid", why: "The capacity/speed sweet spot for AM5 and modern builds — 1% lows love fast RAM.", amazon: amz("32GB DDR5 6000 CL30"), aliexpress: ali("32GB DDR5 6000"), daraz: dar("32GB DDR5 6000 CL30"), alibaba: alb("32GB DDR5 6000") },
+      { name: "2TB Gen4 NVMe SSD", price: "$110", tier: "mid", why: "Load into rounds first — Warzone/Baldur's Gate 3 demand a fast SSD.", amazon: amz("2TB NVMe Gen4 SSD"), aliexpress: ali("2TB NVMe Gen4"), daraz: dar("2TB NVMe Gen4 SSD"), alibaba: alb("2TB NVMe Gen4") },
+      { name: "RX 6600 8GB", price: "$180", tier: "budget", why: "The cheapest card that still pushes 144fps at 1080p low-med in esports titles.", amazon: amz("RX 6600 graphics card"), aliexpress: ali("RX 6600"), daraz: dar("RX 6600 graphics card"), alibaba: alb("RX 6600") },
     ],
   },
   {
@@ -102,9 +106,9 @@ export const GEAR: GearCategory[] = [
     title: "Mousepads",
     blurb: "The cheapest consistency upgrade — control pads for tac shooters, speed for tracking.",
     items: [
-      { name: "Artisan Zero Soft", price: "$70", tier: "pro", why: "The pad half the VCT uses — balanced control and glide, legendary consistency.", amazon: amz("Artisan Zero mousepad"), aliexpress: ali("Artisan Zero mousepad") },
-      { name: "ZOWIE G-SR-SE", price: "$45", tier: "mid", why: "Humidity-proof control surface — CS pros' second-favorite pad after the Artisan.", amazon: amz("ZOWIE G-SR-SE"), aliexpress: ali("ZOWIE G-SR-SE") },
-      { name: "Esports Tiger Aqua Control+", price: "$20", tier: "budget", why: "AliExpress gem — Artisan-adjacent weave for a third of the price.", amazon: amz("Aqua Control mousepad"), aliexpress: ali("Aqua Control Plus mousepad") },
+      { name: "Artisan Zero Soft", price: "$70", tier: "pro", why: "The pad half the VCT uses — balanced control and glide, legendary consistency.", amazon: amz("Artisan Zero mousepad"), aliexpress: ali("Artisan Zero mousepad"), daraz: dar("Artisan Zero mousepad"), alibaba: alb("Artisan Zero mousepad") },
+      { name: "ZOWIE G-SR-SE", price: "$45", tier: "mid", why: "Humidity-proof control surface — CS pros' second-favorite pad after the Artisan.", amazon: amz("ZOWIE G-SR-SE"), aliexpress: ali("ZOWIE G-SR-SE"), daraz: dar("ZOWIE G-SR-SE"), alibaba: alb("ZOWIE G-SR-SE") },
+      { name: "Esports Tiger Aqua Control+", price: "$20", tier: "budget", why: "AliExpress gem — Artisan-adjacent weave for a third of the price.", amazon: amz("Aqua Control mousepad"), aliexpress: ali("Aqua Control Plus mousepad"), daraz: dar("Aqua Control mousepad"), alibaba: alb("Aqua Control Plus mousepad") },
     ],
   },
 ];

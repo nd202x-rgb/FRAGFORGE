@@ -45,12 +45,12 @@ export default function GearPage() {
                     </div>
                     <h3 className="mt-3 font-bold">{item.name}</h3>
                     <p className="mt-1.5 flex-1 text-sm text-mist">{item.why}</p>
-                    <div className="mt-4 flex gap-2">
+                    <div className="mt-4 grid grid-cols-2 gap-2">
                       <a
                         href={item.amazon}
                         target="_blank"
                         rel="noreferrer"
-                        className="flex-1 rounded-lg border border-edge bg-white/[0.04] py-2 text-center text-xs font-bold transition-colors hover:border-edge-bright hover:bg-white/[0.08]"
+                        className="rounded-lg border border-edge bg-white/[0.04] py-2 text-center text-xs font-bold transition-colors hover:border-edge-bright hover:bg-white/[0.08]"
                       >
                         Amazon ↗
                       </a>
@@ -58,9 +58,25 @@ export default function GearPage() {
                         href={item.aliexpress}
                         target="_blank"
                         rel="noreferrer"
-                        className="flex-1 rounded-lg border border-edge bg-white/[0.04] py-2 text-center text-xs font-bold transition-colors hover:border-edge-bright hover:bg-white/[0.08]"
+                        className="rounded-lg border border-edge bg-white/[0.04] py-2 text-center text-xs font-bold transition-colors hover:border-edge-bright hover:bg-white/[0.08]"
                       >
                         AliExpress ↗
+                      </a>
+                      <a
+                        href={item.daraz}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="rounded-lg border border-edge bg-white/[0.04] py-2 text-center text-xs font-bold transition-colors hover:border-edge-bright hover:bg-white/[0.08]"
+                      >
+                        Daraz ↗
+                      </a>
+                      <a
+                        href={item.alibaba}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="rounded-lg border border-edge bg-white/[0.04] py-2 text-center text-xs font-bold transition-colors hover:border-edge-bright hover:bg-white/[0.08]"
+                      >
+                        Alibaba ↗
                       </a>
                     </div>
                   </div>
