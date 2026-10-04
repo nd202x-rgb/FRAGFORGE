@@ -10,6 +10,7 @@ interface Profile {
   avatar: string | null;
   bio: string;
   pro: boolean;
+  role: string;
   memberSince: string;
   linkedCount: number;
 }
@@ -103,9 +104,14 @@ export function ProfileClient({ initial }: { initial: Profile }) {
             />
             <h2 className="mt-4 text-xl font-extrabold">{initial.username}</h2>
             <div className="mt-2 flex flex-wrap justify-center gap-2">
+              {initial.role === "owner" && (
+                <span className="chip border-mag/50 bg-mag/15 font-black tracking-wider text-mag">
+                  OWNER
+                </span>
+              )}
               {initial.pro && (
                 <span className="chip border-gold/40 bg-gold/10 font-bold text-gold">
-                  GO PRO
+                  PRO USER
                 </span>
               )}
               <span className="chip">

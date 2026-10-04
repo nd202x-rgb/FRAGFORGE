@@ -1,13 +1,19 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser, hasProAccess } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 
 // GET /api/dm — conversation list: every user I've exchanged messages with,
-// latest message first.
+// latest message first. GO PRO feature.
 export async function GET() {
   const user = await getCurrentUser();
   if (!user) {
     return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+  }
+  if (!hasProAccess(user)) {
+    return NextResponse.json(
+      { error: "Private messages are a GO PRO feature", upgrade: true },
+      { status: 403 },
+    );
   }
   const rows = getDb()
     .prepare(
@@ -21,7 +27,7 @@ export async function GET() {
           FROM dm_messages WHERE sender_id = :me OR recipient_id = :me
         ) GROUP BY peer_id
       )
-      SELECT u.username, u.avatar, m.body AS last_body, m.created_at AS last_at,
+      SELECT u.username, u.avatar, u.pro, u.role, m.body AS last_body, m.created_at AS last_at,
              (SELECT COUNT(*) FROM dm_messages r
               WHERE r.sender_id = u.id AND r.recipient_id = :me
                 AND r.id > COALESCE((SELECT last_read_id FROM dm_reads WHERE reader_id = :me AND peer_id = u.id), 0)) AS unread
@@ -34,6 +40,8 @@ export async function GET() {
     .all({ me: user.id }) as {
     username: string;
     avatar: string | null;
+    pro: number;
+    role: string;
     last_body: string;
     last_at: string;
     unread: number;

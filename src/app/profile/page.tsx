@@ -28,6 +28,7 @@ export default async function ProfilePage() {
         avatar: user.avatar,
         bio: user.bio,
         pro: !!user.pro,
+        role: user.role,
         memberSince: row.created_at,
         linkedCount,
       }}

@@ -1,14 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { GAMES } from "@/lib/games";
+import { getCurrentUser, hasProAccess } from "@/lib/auth";
 import { Reveal } from "@/components/Reveal";
+import { FindPlayers } from "./FindPlayers";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Squad rooms",
   description: "Find teammates for every game — text chat plus voice and video rooms.",
 };
 
-export default function SquadsPage() {
+export default async function SquadsPage() {
+  const user = await getCurrentUser();
   return (
     <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
       <Reveal>
@@ -21,6 +26,8 @@ export default function SquadsPage() {
           video room to find a squad for your next match.
         </p>
       </Reveal>
+
+      <FindPlayers signedIn={!!user} isPro={!!user && hasProAccess(user)} />
 
       {/* Global lounge — open to every member */}
       <Reveal delay={0.05}>

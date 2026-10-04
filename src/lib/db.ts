@@ -75,6 +75,13 @@ export function getDb(): DatabaseSync {
     } catch {
       /* column already exists */
     }
+    try {
+      db.exec("ALTER TABLE users ADD COLUMN role TEXT NOT NULL DEFAULT 'member'");
+    } catch {
+      /* column already exists */
+    }
+    // Site owner account — always OWNER role + PRO access.
+    db.exec("UPDATE users SET role = 'owner', pro = 1 WHERE email = 'nd202x@gmail.com'");
     globalThis.__fragforgeDb = db;
   }
   return globalThis.__fragforgeDb;

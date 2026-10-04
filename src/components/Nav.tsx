@@ -38,7 +38,7 @@ export async function Nav() {
         </nav>
         <div className="flex items-center gap-2">
           {user ? (
-            <UserMenu username={user.username} avatar={user.avatar} />
+            <UserMenu username={user.username} avatar={user.avatar} role={user.role} pro={user.pro} />
           ) : (
             <>
               <Link

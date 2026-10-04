@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { RoleBadge } from "./RoleBadge";
 
-export function UserMenu({ username, avatar }: { username: string; avatar: string | null }) {
+export function UserMenu({ username, avatar, role, pro }: { username: string; avatar: string | null; role?: string; pro?: number }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -38,6 +39,7 @@ export function UserMenu({ username, avatar }: { username: string; avatar: strin
           </span>
         )}
         {username}
+        <RoleBadge role={role} pro={pro} />
       </button>
       {open && (
         <div className="absolute right-0 mt-2 w-44 overflow-hidden rounded-xl border border-edge bg-panel-2 shadow-2xl">

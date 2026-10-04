@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser, hasProAccess } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 
 const MAX_BODY = 500;
@@ -10,12 +10,20 @@ interface PeerRow {
   username: string;
   avatar: string | null;
   pro: number;
+  role: string;
 }
 
 async function findPeer(username: string): Promise<PeerRow | undefined> {
   return getDb()
-    .prepare("SELECT id, username, avatar, pro FROM users WHERE username = ? COLLATE NOCASE")
+    .prepare("SELECT id, username, avatar, pro, role FROM users WHERE username = ? COLLATE NOCASE")
     .get(decodeURIComponent(username)) as PeerRow | undefined;
+}
+
+function proGate() {
+  return NextResponse.json(
+    { error: "Private messages are a GO PRO feature", upgrade: true },
+    { status: 403 },
+  );
 }
 
 // GET /api/dm/<username>?after=<id> — thread messages, marks the conversation read.
@@ -27,6 +35,7 @@ export async function GET(
   if (!user) {
     return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   }
+  if (!hasProAccess(user)) return proGate();
   const { username } = await params;
   const peer = await findPeer(username);
   if (!peer || peer.id === user.id) {
@@ -61,7 +70,7 @@ export async function GET(
     ).run(user.id, peer.id, lastId);
   }
   return NextResponse.json({
-    peer: { username: peer.username, avatar: peer.avatar, pro: peer.pro },
+    peer: { username: peer.username, avatar: peer.avatar, pro: peer.pro, role: peer.role },
     messages,
   });
 }
@@ -75,6 +84,7 @@ export async function POST(
   if (!user) {
     return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   }
+  if (!hasProAccess(user)) return proGate();
   const { username } = await params;
   const peer = await findPeer(username);
   if (!peer || peer.id === user.id) {

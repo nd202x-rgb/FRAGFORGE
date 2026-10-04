@@ -2,10 +2,13 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { RoleBadge } from "@/components/RoleBadge";
 
 interface Conversation {
   username: string;
   avatar: string | null;
+  pro: number;
+  role: string;
   last_body: string;
   last_at: string;
   unread: number;
@@ -15,6 +18,7 @@ interface FoundUser {
   username: string;
   avatar: string | null;
   pro: number;
+  role: string;
 }
 
 const AVATAR_COLORS = ["#ff7a1a", "#8b5cf6", "#f43f8e", "#f5b942", "#4ade80", "#f97316", "#38bdf8", "#e879f9"];
@@ -142,11 +146,7 @@ export function InboxClient() {
               >
                 <Avatar username={u.username} avatar={u.avatar} size={9} />
                 <span className="font-semibold">{u.username}</span>
-                {!!u.pro && (
-                  <span className="chip border-gold/40 bg-gold/10 text-[10px] font-bold text-gold">
-                    PRO
-                  </span>
-                )}
+                <RoleBadge role={u.role} pro={u.pro} />
                 <span className="ml-auto text-xs font-bold text-neon">Message →</span>
               </Link>
             ))}
@@ -179,7 +179,10 @@ export function InboxClient() {
                 <Avatar username={c.username} avatar={c.avatar} />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline justify-between gap-2">
-                    <p className="truncate font-bold">{c.username}</p>
+                    <p className="flex items-center gap-1.5 truncate font-bold">
+                      {c.username}
+                      <RoleBadge role={c.role} pro={c.pro} />
+                    </p>
                     <span className="shrink-0 text-xs text-faint">{fmtWhen(c.last_at)}</span>
                   </div>
                   <p className="mt-0.5 truncate text-sm text-faint">{c.last_body}</p>

@@ -10,8 +10,14 @@ export interface AuthUser {
   email: string;
   username: string;
   pro: number; // 1 once a GO PRO Stripe checkout completes
+  role: string; // 'member' | 'owner'
   avatar: string | null;
   bio: string;
+}
+
+// PRO access = paid subscription, or the site owner.
+export function hasProAccess(user: AuthUser): boolean {
+  return user.pro === 1 || user.role === "owner";
 }
 
 export function hashPassword(password: string): string {
@@ -65,7 +71,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
   if (!token) return null;
   const row = getDb()
     .prepare(
-      `SELECT u.id, u.email, u.username, u.pro, u.avatar, u.bio FROM sessions s
+      `SELECT u.id, u.email, u.username, u.pro, u.role, u.avatar, u.bio FROM sessions s
        JOIN users u ON u.id = s.user_id
        WHERE s.token = ? AND s.expires_at > datetime('now')`,
     )

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Avatar, avatarColor } from "../InboxClient";
+import { RoleBadge } from "@/components/RoleBadge";
 
 interface DmMsg {
   id: number;
@@ -15,6 +16,7 @@ interface Peer {
   username: string;
   avatar: string | null;
   pro: number;
+  role?: string;
 }
 
 function fmtTime(iso: string): string {
@@ -98,14 +100,12 @@ export function DmClient({ peer, me }: { peer: Peer; me: string }) {
         <div className="flex items-center gap-3 border-b border-edge px-5 py-3.5">
           <Avatar username={peerName} avatar={peer.avatar} size={9} />
           <div>
-            <p className="font-bold leading-tight">{peerName}</p>
+            <p className="flex items-center gap-1.5 font-bold leading-tight">
+              {peerName}
+              <RoleBadge role={peer.role} pro={peer.pro} />
+            </p>
             <p className="text-xs text-faint">Private chat — only you two can see this</p>
           </div>
-          {!!peer.pro && (
-            <span className="chip ml-auto border-gold/40 bg-gold/10 font-bold text-gold">
-              GO PRO
-            </span>
-          )}
         </div>
 
         <div

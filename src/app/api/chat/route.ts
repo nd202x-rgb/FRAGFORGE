@@ -21,11 +21,11 @@ export async function GET(req: Request) {
   const after = Number(searchParams.get("after") ?? "0") || 0;
   const rows = getDb()
     .prepare(
-      `SELECT m.id, m.username, m.body, m.created_at, u.avatar FROM chat_messages m
+      `SELECT m.id, m.username, m.body, m.created_at, u.avatar, u.pro, u.role FROM chat_messages m
        JOIN users u ON u.id = m.user_id
        WHERE m.room = ? AND m.id > ? ORDER BY m.id DESC LIMIT ?`,
     )
-    .all(room, after, PAGE) as { id: number; username: string; body: string; created_at: string; avatar: string | null }[];
+    .all(room, after, PAGE) as { id: number; username: string; body: string; created_at: string; avatar: string | null; pro: number; role: string }[];
   return NextResponse.json({ messages: rows.reverse() });
 }
 

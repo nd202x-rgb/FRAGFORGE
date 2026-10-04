@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser, hasProAccess } from "@/lib/auth";
 import { getDb } from "@/lib/db";
+import { ProGate } from "../ProGate";
 import { DmClient } from "./DmClient";
 
 export const dynamic = "force-dynamic";
@@ -21,18 +22,19 @@ export default async function DmPage({
 }) {
   const user = await getCurrentUser();
   if (!user) redirect("/login?next=/messages");
+  if (!hasProAccess(user)) return <ProGate />;
   const { username } = await params;
   const peer = getDb()
-    .prepare("SELECT username, avatar, pro FROM users WHERE username = ? COLLATE NOCASE")
+    .prepare("SELECT username, avatar, pro, role FROM users WHERE username = ? COLLATE NOCASE")
     .get(decodeURIComponent(username)) as
-    | { username: string; avatar: string | null; pro: number }
+    | { username: string; avatar: string | null; pro: number; role: string }
     | undefined;
   if (!peer || peer.username.toLowerCase() === user.username.toLowerCase()) {
     redirect("/messages");
   }
   return (
     <DmClient
-      peer={{ username: peer.username, avatar: peer.avatar, pro: peer.pro }}
+      peer={{ username: peer.username, avatar: peer.avatar, pro: peer.pro, role: peer.role }}
       me={user.username}
     />
   );

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { RoleBadge } from "@/components/RoleBadge";
 
 interface ChatMsg {
   id: number;
@@ -9,6 +10,8 @@ interface ChatMsg {
   body: string;
   created_at: string;
   avatar: string | null;
+  pro?: number;
+  role?: string;
 }
 
 const AVATAR_COLORS = ["#22d3ee", "#8b5cf6", "#f43f8e", "#f5b942", "#4ade80", "#f97316", "#38bdf8", "#e879f9"];
@@ -166,6 +169,7 @@ export function SquadClient({
                         {m.username}
                       </Link>
                     )}
+                    <RoleBadge role={m.role} pro={m.pro} className="ml-1.5" />
                     {" · "}
                     {fmtTime(m.created_at)}
                   </p>
