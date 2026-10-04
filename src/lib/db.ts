@@ -6,7 +6,6 @@ import path from "node:path";
 const DB_PATH = process.env.FRAGFORGE_DB_PATH ?? path.join(process.cwd(), "data", "fragforge.db");
 
 declare global {
-  // eslint-disable-next-line no-var
   var __fragforgeDb: DatabaseSync | undefined;
 }
 
