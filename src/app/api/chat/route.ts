@@ -6,8 +6,10 @@ import { GAME_BY_SLUG } from "@/lib/games";
 const MAX_BODY = 500;
 const PAGE = 60;
 
+export const LOUNGE_ROOM = "lounge";
+
 function validRoom(room: string | null | undefined): room is string {
-  return !!room && GAME_BY_SLUG.has(room);
+  return !!room && (room === LOUNGE_ROOM || GAME_BY_SLUG.has(room));
 }
 
 export async function GET(req: Request) {

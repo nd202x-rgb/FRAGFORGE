@@ -10,6 +10,18 @@ interface ChatMsg {
   created_at: string;
 }
 
+const AVATAR_COLORS = ["#22d3ee", "#8b5cf6", "#f43f8e", "#f5b942", "#4ade80", "#f97316", "#38bdf8", "#e879f9"];
+
+function avatarColor(name: string): string {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) | 0;
+  return AVATAR_COLORS[Math.abs(h) % AVATAR_COLORS.length];
+}
+
+function fmtTime(iso: string): string {
+  return new Date(iso + "Z").toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+
 export function SquadClient({
   slug,
   accent,
@@ -84,40 +96,74 @@ export function SquadClient({
           </h2>
           {username && <span className="chip">as {username}</span>}
         </div>
-        <div className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
+        <div className="flex-1 space-y-4 overflow-y-auto px-5 py-4">
           {messages.length === 0 && (
-            <p className="text-sm text-faint">
-              No messages yet — be the first to post your rank, region and what you&apos;re queueing.
-            </p>
-          )}
-          {messages.map((m) => (
-            <div key={m.id} className="text-sm">
-              <span className="font-bold" style={{ color: accent }}>
-                {m.username}
+            <div className="flex h-full flex-col items-center justify-center text-center">
+              <span
+                className="flex h-12 w-12 items-center justify-center rounded-full text-lg"
+                style={{ backgroundColor: `${accent}18`, color: accent }}
+              >
+                💬
               </span>
-              <span className="ms-2 text-xs text-faint">
-                {new Date(m.created_at + "Z").toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-              </span>
-              <p className="text-mist">{m.body}</p>
+              <p className="mt-3 max-w-xs text-sm text-faint">
+                No messages yet — be the first to post your rank, region and what you&apos;re queueing.
+              </p>
             </div>
-          ))}
+          )}
+          {messages.map((m) => {
+            const mine = !!username && m.username === username;
+            const color = avatarColor(m.username);
+            return (
+              <div key={m.id} className={`flex items-end gap-2.5 ${mine ? "flex-row-reverse" : ""}`}>
+                <span
+                  className="flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-full text-xs font-black text-void"
+                  style={{ backgroundColor: mine ? accent : color }}
+                  title={m.username}
+                >
+                  {m.username.slice(0, 1).toUpperCase()}
+                </span>
+                <div className={`max-w-[75%] ${mine ? "text-right" : ""}`}>
+                  <p className="mb-1 px-1 text-[11px] text-faint">
+                    <span className="font-bold" style={{ color: mine ? accent : color }}>
+                      {mine ? "You" : m.username}
+                    </span>
+                    {" · "}
+                    {fmtTime(m.created_at)}
+                  </p>
+                  <p
+                    className={`inline-block whitespace-pre-wrap break-words rounded-2xl px-3.5 py-2 text-left text-sm leading-relaxed ${
+                      mine ? "rounded-br-sm text-void" : "rounded-bl-sm text-white"
+                    }`}
+                    style={
+                      mine
+                        ? { backgroundColor: accent }
+                        : { backgroundColor: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }
+                    }
+                  >
+                    {m.body}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
           <div ref={bottomRef} />
         </div>
         {signedIn ? (
-          <form onSubmit={send} className="flex gap-2 border-t border-edge p-4">
+          <form onSubmit={send} className="flex items-center gap-2 border-t border-edge p-4">
             <input
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               maxLength={500}
               placeholder="LFG? Drop your rank, region, mode…"
-              className="min-w-0 flex-1 rounded-lg border border-edge bg-void/60 px-3 py-2.5 text-sm outline-none focus:border-neon"
+              className="min-w-0 flex-1 rounded-full border border-edge bg-void/60 px-4 py-2.5 text-sm outline-none focus:border-neon"
             />
             <button
               type="submit"
-              className="rounded-lg px-5 text-sm font-bold text-void transition-transform hover:scale-[1.03]"
+              aria-label="Send message"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-black text-void transition-transform hover:scale-105"
               style={{ backgroundColor: accent }}
             >
-              Send
+              ➤
             </button>
           </form>
         ) : (

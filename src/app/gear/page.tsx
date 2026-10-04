@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { GEAR } from "@/content/gear";
 import { Reveal } from "@/components/Reveal";
 
@@ -38,12 +39,24 @@ export default function GearPage() {
               const tier = TIER_STYLE[item.tier];
               return (
                 <Reveal key={item.name} delay={Math.min(i * 0.05, 0.25)}>
-                  <div className="panel panel-hover flex h-full flex-col p-5">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className={`chip ${tier.cls}`}>{tier.label}</span>
-                      <span className="text-lg font-extrabold text-gold">{item.price}</span>
+                  <div className="panel panel-hover flex h-full flex-col overflow-hidden">
+                    <div className="relative aspect-[3/2] w-full overflow-hidden">
+                      <Image
+                        src={`/gear/${cat.id}.jpg`}
+                        alt={`${cat.title} — ${item.name}`}
+                        fill
+                        sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
+                        className="object-cover transition-transform duration-500 hover:scale-105"
+                      />
+                      <span className={`chip absolute left-3 top-3 bg-void/70 backdrop-blur-sm ${tier.cls}`}>
+                        {tier.label}
+                      </span>
+                      <span className="absolute right-3 top-3 rounded-lg bg-void/70 px-2.5 py-1 text-sm font-extrabold text-gold backdrop-blur-sm">
+                        {item.price}
+                      </span>
                     </div>
-                    <h3 className="mt-3 font-bold">{item.name}</h3>
+                    <div className="flex flex-1 flex-col p-5">
+                    <h3 className="font-bold">{item.name}</h3>
                     <p className="mt-1.5 flex-1 text-sm text-mist">{item.why}</p>
                     <div className="mt-4 grid grid-cols-2 gap-2">
                       <a
@@ -78,6 +91,7 @@ export default function GearPage() {
                       >
                         Alibaba ↗
                       </a>
+                    </div>
                     </div>
                   </div>
                 </Reveal>
