@@ -63,7 +63,8 @@ export function DmClient({ peer, me }: { peer: Peer; me: string }) {
   useEffect(() => {
     const last = messages[messages.length - 1];
     if (pinnedToBottom.current || last?.mine) {
-      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+      const el = listRef.current;
+      if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
     }
   }, [messages]);
 

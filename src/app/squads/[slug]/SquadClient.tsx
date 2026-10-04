@@ -73,7 +73,8 @@ export function SquadClient({
     const last = messages[messages.length - 1];
     const ownMessage = !!username && last?.username === username;
     if (pinnedToBottom.current || ownMessage) {
-      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+      const el = listRef.current;
+      if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
     }
   }, [messages, username]);
 
