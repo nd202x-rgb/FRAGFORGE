@@ -35,6 +35,15 @@ export function getDb(): DatabaseSync {
         created_at TEXT NOT NULL DEFAULT (datetime('now')),
         UNIQUE (user_id, platform)
       );
+      CREATE TABLE IF NOT EXISTS chat_messages (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        room TEXT NOT NULL,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        username TEXT NOT NULL,
+        body TEXT NOT NULL,
+        created_at TEXT NOT NULL DEFAULT (datetime('now'))
+      );
+      CREATE INDEX IF NOT EXISTS idx_chat_room ON chat_messages (room, id);
     `);
     globalThis.__fragforgeDb = db;
   }

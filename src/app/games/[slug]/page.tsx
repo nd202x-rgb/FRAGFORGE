@@ -52,11 +52,55 @@ export default async function GamePage(props: PageProps<"/games/[slug]">) {
                 {game.tagline} · {game.publisher}
               </p>
             </div>
+            <div className="ms-auto flex flex-wrap gap-2">
+              <a
+                href={game.site}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-lg border border-edge bg-white/[0.05] px-4 py-2 text-sm font-bold transition-colors hover:border-neon hover:text-neon"
+              >
+                Official site ↗
+              </a>
+              <a
+                href={game.discord}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-lg px-4 py-2 text-sm font-bold text-void transition-transform hover:scale-[1.03]"
+                style={{ backgroundColor: "#5865f2" }}
+              >
+                Join Discord ↗
+              </a>
+              <Link
+                href={`/squads/${game.slug}`}
+                className="rounded-lg px-4 py-2 text-sm font-bold text-void transition-transform hover:scale-[1.03]"
+                style={{ backgroundColor: game.accent }}
+              >
+                Squad room →
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+        {/* PC requirements */}
+        <Reveal>
+          <section className="mb-14 grid gap-4 sm:grid-cols-2">
+            <div className="panel p-5">
+              <h2 className="text-sm font-bold uppercase tracking-widest text-faint">
+                Minimum requirements
+              </h2>
+              <p className="mt-2 text-sm text-mist">{game.specs.min}</p>
+            </div>
+            <div className="panel p-5" style={{ borderColor: `${game.accent}44` }}>
+              <h2 className="text-sm font-bold uppercase tracking-widest" style={{ color: game.accent }}>
+                For best performance
+              </h2>
+              <p className="mt-2 text-sm text-mist">{game.specs.recommended}</p>
+            </div>
+          </section>
+        </Reveal>
+
         {!content ? (
           <div className="panel p-10 text-center">
             <h2 className="text-xl font-bold">Guide incoming</h2>

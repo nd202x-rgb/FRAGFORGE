@@ -65,15 +65,36 @@ export const GEAR: GearCategory[] = [
     ],
   },
   {
+    id: "builds",
+    title: "Full PC builds",
+    blurb: "Complete performance targets — build it yourself or match a prebuilt.",
+    items: [
+      { name: "Pro build — 360+ fps competitive", price: "~$2,200", tier: "pro", why: "Ryzen 7 9800X3D + RTX 5070 Ti + 32GB DDR5-6000 + 2TB Gen4 NVMe. Locks 240–400fps at 1440p in Valorant/CS2/Warzone with pristine 1% lows.", amazon: amz("9800X3D RTX 5070 Ti gaming PC"), aliexpress: ali("9800X3D gaming pc") },
+      { name: "Mid build — 144–240fps sweet spot", price: "~$1,200", tier: "mid", why: "Ryzen 5 7600 + RTX 5070/RX 9070 + 32GB DDR5 + 1TB NVMe. The value sweet spot — high-refresh in every competitive title.", amazon: amz("Ryzen 5 7600 RTX 5070 gaming PC"), aliexpress: ali("RTX 5070 gaming pc") },
+      { name: "Budget build — 1080p high-refresh", price: "~$650", tier: "budget", why: "Ryzen 5 5600/Core i5-12400F + RX 6600/RTX 4060 + 16GB DDR4 + 500GB NVMe. 144+ fps in Valorant, CS2, LoL, Fortnite performance mode.", amazon: amz("RX 6600 gaming pc build"), aliexpress: ali("RX 6600 gaming pc") },
+    ],
+  },
+  {
+    id: "laptops",
+    title: "Gaming laptops",
+    blurb: "Portable performance — look for a 240Hz-class panel and a 4070-class GPU.",
+    items: [
+      { name: "ASUS ROG Zephyrus G14 (2025)", price: "$1,600", tier: "pro", why: "OLED 120Hz+, RTX 50-series in 1.5kg — the laptop pros travel with.", amazon: amz("ASUS ROG Zephyrus G14"), aliexpress: ali("ROG Zephyrus G14") },
+      { name: "Lenovo Legion Pro 5", price: "$1,400", tier: "mid", why: "RTX 5070 + 240Hz display — the best fps-per-dollar gaming laptop.", amazon: amz("Lenovo Legion Pro 5"), aliexpress: ali("Lenovo Legion Pro 5") },
+      { name: "ASUS TUF Gaming A15", price: "$1,000", tier: "mid", why: "RTX 4060 + 144Hz in a tough chassis — the reliable mid-range workhorse.", amazon: amz("ASUS TUF Gaming A15"), aliexpress: ali("ASUS TUF A15") },
+      { name: "Acer Nitro V 15", price: "$750", tier: "budget", why: "RTX 4050/4060 entry machine — runs Valorant/CS2 at high refresh on a budget.", amazon: amz("Acer Nitro V 15"), aliexpress: ali("Acer Nitro V 15") },
+    ],
+  },
+  {
     id: "pc",
-    title: "PC parts & laptops",
+    title: "PC parts",
     blurb: "Frames first: a strong CPU + GPU pairing keeps you above monitor refresh.",
     items: [
       { name: "AMD Ryzen 7 9800X3D", price: "$479", tier: "pro", why: "The fastest gaming CPU — 3D V-Cache crushes 1% lows in CS2, Valorant and Warzone.", amazon: amz("Ryzen 7 9800X3D"), aliexpress: ali("Ryzen 9800X3D") },
       { name: "NVIDIA RTX 5070 Ti", price: "$750", tier: "pro", why: "240+ fps at 1440p in every competitive title; DLSS 4 frame gen for single-player.", amazon: amz("RTX 5070 Ti"), aliexpress: ali("RTX 5070 Ti") },
-      { name: "ASUS ROG Zephyrus G14 (2025)", price: "$1,600", tier: "pro", why: "OLED 120Hz+, RTX 50-series in 1.5kg — the laptop pros travel with.", amazon: amz("ASUS ROG Zephyrus G14"), aliexpress: ali("ROG Zephyrus G14") },
-      { name: "Lenovo Legion Pro 5", price: "$1,400", tier: "mid", why: "RTX 5070 + 240Hz display — the best fps-per-dollar gaming laptop.", amazon: amz("Lenovo Legion Pro 5"), aliexpress: ali("Lenovo Legion Pro 5") },
-      { name: "Acer Nitro V 15", price: "$750", tier: "budget", why: "RTX 4050/4060 entry machine — runs Valorant/CS2 at high refresh on a budget.", amazon: amz("Acer Nitro V 15"), aliexpress: ali("Acer Nitro V 15") },
+      { name: "32GB DDR5-6000 CL30 kit", price: "$110", tier: "mid", why: "The capacity/speed sweet spot for AM5 and modern builds — 1% lows love fast RAM.", amazon: amz("32GB DDR5 6000 CL30"), aliexpress: ali("32GB DDR5 6000") },
+      { name: "2TB Gen4 NVMe SSD", price: "$110", tier: "mid", why: "Load into rounds first — Warzone/Baldur's Gate 3 demand a fast SSD.", amazon: amz("2TB NVMe Gen4 SSD"), aliexpress: ali("2TB NVMe Gen4") },
+      { name: "RX 6600 8GB", price: "$180", tier: "budget", why: "The cheapest card that still pushes 144fps at 1080p low-med in esports titles.", amazon: amz("RX 6600 graphics card"), aliexpress: ali("RX 6600") },
     ],
   },
   {
