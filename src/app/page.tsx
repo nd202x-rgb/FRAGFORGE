@@ -48,12 +48,12 @@ export default function Home() {
         <div className="scanline absolute inset-0 -z-10 overflow-hidden" />
         <div className="mx-auto max-w-4xl text-center">
           <Reveal>
-            <span className="chip">13 games · 150+ techniques · pro-verified</span>
+            <span className="chip">23 games · 200+ techniques · pro-verified</span>
           </Reveal>
           <Reveal delay={0.08}>
             <h1 className="mt-6 text-5xl font-black leading-[1.05] tracking-tight sm:text-7xl">
               FORGE YOUR
-              <span className="block bg-gradient-to-r from-neon via-vio to-mag bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-white via-neon to-orange-600 bg-clip-text text-transparent">
                 EDGE.
               </span>
             </h1>
