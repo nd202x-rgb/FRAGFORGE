@@ -32,16 +32,24 @@ function providerConfig(key: string) {
     return {
       base: process.env.OPENAI_BASE_URL ?? "https://api.openai.com/v1",
       model: process.env.OPENAI_MODEL ?? "gpt-4o-mini",
+      models: [process.env.OPENAI_MODEL ?? "gpt-4o-mini"],
     };
   }
   // Google AI Studio / Gemini keys: classic "AIza..." and newer "AQ."
   if (key.startsWith("AIza") || key.startsWith("AQ.")) {
     return {
       base: "https://generativelanguage.googleapis.com/v1beta/openai",
+      // Fallback chain: if a model is saturated, the next is tried instantly.
       model: "gemini-3.8-flash",
+      models: [
+        "gemini-3.8-flash",
+        "gemini-3.7-flash",
+        "gemini-3.6-flash",
+        "gemini-flash-lite-latest",
+      ],
     };
   }
-  return { base: "https://api.openai.com/v1", model: "gpt-4o-mini" };
+  return { base: "https://api.openai.com/v1", model: "gpt-4o-mini", models: ["gpt-4o-mini"] };
 }
 
 export function llmAvailable(): boolean {
@@ -54,15 +62,19 @@ export async function llmReply(
 ): Promise<string | null> {
   const key = process.env.OPENAI_API_KEY;
   if (!key) return null;
-  const { base, model } = providerConfig(key);
-  // Free-tier LLMs rate-limit under load — retry transient failures.
-  for (let attempt = 0; attempt < 4; attempt++) {
-    const result = await callModel(base, model, key, query, retrievalContext);
-    if (result !== "RETRY" && result !== "FATAL") return result;
-    if (result === "FATAL") return null;
-    await new Promise((r) => setTimeout(r, 1200 * (attempt + 1)));
-  }
-  return null;
+  const { base, models } = providerConfig(key);
+  // Race all fallback models — the free tier is congested unpredictably,
+  // so whichever model answers first wins. Losers are abandoned mid-flight.
+  let winner: string | null = null;
+  await Promise.all(
+    models.map(async (model) => {
+      const result = await callModel(base, model, key, query, retrievalContext);
+      if (winner === null && result !== "RETRY" && result !== "FATAL") {
+        winner = result;
+      }
+    }),
+  );
+  return winner;
 }
 
 const RETRYABLE = new Set([429, 500, 502, 503, 504]);
@@ -83,7 +95,7 @@ async function callModel(
       },
       body: JSON.stringify({
         model,
-        max_tokens: 600,
+        max_tokens: 450,
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
           {
@@ -92,10 +104,10 @@ async function callModel(
           },
         ],
       }),
-      signal: AbortSignal.timeout(30_000),
+      signal: AbortSignal.timeout(15_000),
     });
     if (!res.ok) {
-      console.error("llm error", res.status, await res.text().catch(() => ""));
+      console.error("llm error", model, res.status, await res.text().catch(() => ""));
       return RETRYABLE.has(res.status) ? "RETRY" : "FATAL";
     }
     const json = (await res.json()) as {
@@ -104,7 +116,7 @@ async function callModel(
     const text = json.choices?.[0]?.message?.content?.trim();
     return text || "FATAL";
   } catch (e) {
-    console.error("llm call failed", e);
+    console.error("llm call failed", model, e);
     return "RETRY"; // network blips are worth retrying
   }
 }

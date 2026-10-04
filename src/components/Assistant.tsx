@@ -7,6 +7,7 @@ interface Msg {
   role: "user" | "bot";
   text: string;
   links?: { label: string; href: string }[];
+  ai?: boolean;
   authError?: boolean;
 }
 
@@ -70,7 +71,10 @@ export function Assistant() {
           { role: "bot", text: json.error ?? "Something went wrong — try again." },
         ]);
       } else {
-        setMessages((m) => [...m, { role: "bot", text: json.reply, links: json.links }]);
+        setMessages((m) => [
+          ...m,
+          { role: "bot", text: json.reply, links: json.links, ai: !!json.ai },
+        ]);
       }
     } catch {
       setMessages((m) => [
@@ -101,7 +105,7 @@ export function Assistant() {
               <p className="text-sm font-extrabold leading-tight">
                 FORGE <span className="text-neon">AI</span>
               </p>
-              <p className="text-[11px] text-faint">Coach for all 23 games</p>
+              <p className="text-[11px] text-faint">Real AI coach — powered by Gemini</p>
             </div>
             <button
               onClick={() => setOpen(false)}
@@ -141,6 +145,11 @@ export function Assistant() {
                       : "rounded-bl-sm border border-white/10 bg-white/5 text-mist"
                   }`}
                 >
+                  {m.ai && (
+                    <span className="mb-1 inline-block rounded-full border border-vio/50 bg-vio/15 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider text-vio">
+                      ✦ AI answer
+                    </span>
+                  )}
                   {renderText(m.text)}
                   {m.authError && (
                     <Link
