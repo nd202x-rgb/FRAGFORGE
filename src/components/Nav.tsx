@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getCurrentUser } from "@/lib/auth";
 import { UserMenu } from "./UserMenu";
 
@@ -17,8 +18,8 @@ export async function Nav() {
     <header className="sticky top-0 z-50 border-b border-edge bg-void/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="group flex items-center gap-2.5">
-          <span className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-neon to-vio font-black text-void transition-transform group-hover:rotate-12">
-            F
+          <span className="relative block h-9 w-9 overflow-hidden rounded-lg transition-transform group-hover:rotate-12">
+            <Image src="/logo-mark.png" alt="FragForge" fill sizes="36px" className="object-cover" />
           </span>
           <span className="text-lg font-extrabold tracking-tight">
             Frag<span className="text-neon">Forge</span>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { GAMES } from "@/lib/games";
 
 export function Footer() {
@@ -6,12 +7,9 @@ export function Footer() {
     <footer className="mt-24 border-t border-edge bg-panel/40">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4">
         <div className="md:col-span-2">
-          <div className="flex items-center gap-2.5">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-neon to-vio font-black text-void">
-              F
-            </span>
-            <span className="text-lg font-extrabold tracking-tight">
-              Frag<span className="text-neon">Forge</span>
+          <div className="flex items-center gap-3">
+            <span className="relative block h-20 w-20 overflow-hidden rounded-xl">
+              <Image src="/logo.png" alt="FragForge by ND202" fill sizes="80px" className="object-cover" />
             </span>
           </div>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-mist">
