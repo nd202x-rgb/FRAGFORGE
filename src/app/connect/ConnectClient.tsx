@@ -165,6 +165,8 @@ export function ConnectClient({
             ) : (
               <form onSubmit={(e) => link(e, p.id)} className="mt-3 flex gap-2">
                 <input
+                  id={`tag-${p.id}`}
+                  name={p.id}
                   value={values[p.id] ?? ""}
                   onChange={(e) =>
                     setValues((v) => ({ ...v, [p.id]: e.target.value }))
