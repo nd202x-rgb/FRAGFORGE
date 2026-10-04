@@ -1,19 +1,27 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import { COURSES, COACHING, PRO_FEATURES } from "@/content/gopro";
 import { GAME_BY_SLUG } from "@/lib/games";
+import { getCurrentUser } from "@/lib/auth";
 import { Reveal } from "@/components/Reveal";
+import { ProReturn, SubscribeButton } from "./GoProClient";
 
 export const metadata: Metadata = {
   title: "GO PRO",
   description: "Premium video courses, coaching and ranked climb programs — one tier above free.",
 };
 
-export default function GoProPage() {
+export const dynamic = "force-dynamic";
+
+export default async function GoProPage() {
+  const user = await getCurrentUser();
   return (
     <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
       <Reveal>
-        <span className="chip border-gold/50 text-gold">Demo pricing — no real checkout</span>
+        <span className="chip border-gold/50 text-gold">
+          {user?.pro ? "PRO member" : "Live checkout via Stripe"}
+        </span>
         <h1 className="mt-4 text-4xl font-extrabold tracking-tight sm:text-5xl">
           GO <span className="text-gold">PRO</span>
         </h1>
@@ -23,6 +31,10 @@ export default function GoProPage() {
           climb programs.
         </p>
       </Reveal>
+
+      <Suspense fallback={null}>
+        <ProReturn />
+      </Suspense>
 
       {/* Plans */}
       <section className="mt-12 grid gap-4 md:grid-cols-2">
@@ -57,12 +69,7 @@ export default function GoProPage() {
                 <li key={f} className="flex gap-2"><span className="text-gold">✓</span>{f}</li>
               ))}
             </ul>
-            <button
-              className="mt-6 rounded-lg bg-gold px-5 py-2.5 text-sm font-bold text-void transition-transform hover:scale-[1.03]"
-              title="Demo — checkout not wired"
-            >
-              Upgrade to GO PRO
-            </button>
+            <SubscribeButton signedIn={!!user} pro={!!user?.pro} />
           </div>
         </Reveal>
       </section>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { EMULATORS } from "@/content/emulators";
 import { Reveal, Stagger, StaggerItem } from "@/components/Reveal";
 
@@ -38,12 +39,24 @@ export default function EmulatorsPage() {
       </Reveal>
 
       <Stagger className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {EMULATORS.map((e) => (
+        {EMULATORS.map((e, i) => (
           <StaggerItem key={e.name}>
-            <div className="panel panel-hover flex h-full flex-col p-5">
+            <div className="panel panel-hover flex h-full flex-col overflow-hidden">
+              <div className="relative aspect-[3/2] w-full">
+                <Image
+                  src={`/emulators/emu-${i}.jpg`}
+                  alt={`${e.name} — ${e.systems}`}
+                  fill
+                  sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                  className="object-cover"
+                />
+                <span className="chip absolute right-3 top-3 bg-void/70 backdrop-blur-sm">
+                  {e.status}
+                </span>
+              </div>
+              <div className="flex flex-1 flex-col p-5">
               <div className="flex items-center justify-between gap-2">
                 <h3 className="font-bold">{e.name}</h3>
-                <span className="chip">{e.status}</span>
               </div>
               <p className="mt-1.5 text-sm font-semibold text-neon">{e.systems}</p>
               <p className="mt-1 text-xs text-faint">Runs on: {e.platform}</p>
@@ -56,6 +69,7 @@ export default function EmulatorsPage() {
               >
                 Official site ↗
               </a>
+              </div>
             </div>
           </StaggerItem>
         ))}

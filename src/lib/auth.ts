@@ -9,6 +9,7 @@ export interface AuthUser {
   id: number;
   email: string;
   username: string;
+  pro: number; // 1 once a GO PRO Stripe checkout completes
 }
 
 export function hashPassword(password: string): string {
@@ -62,7 +63,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
   if (!token) return null;
   const row = getDb()
     .prepare(
-      `SELECT u.id, u.email, u.username FROM sessions s
+      `SELECT u.id, u.email, u.username, u.pro FROM sessions s
        JOIN users u ON u.id = s.user_id
        WHERE s.token = ? AND s.expires_at > datetime('now')`,
     )

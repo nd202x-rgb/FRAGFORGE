@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { GAME_BY_SLUG, GAMES } from "@/lib/games";
+import { GAME_BY_SLUG, GAMES, gameBanner } from "@/lib/games";
 import { loadGameContent } from "@/lib/content";
 import { getCurrentUser } from "@/lib/auth";
 import { Reveal } from "@/components/Reveal";
@@ -31,6 +32,15 @@ export default async function GamePage(props: PageProps<"/games/[slug]">) {
     <div>
       {/* Header */}
       <section className="relative overflow-hidden border-b border-edge px-4 py-16 sm:px-6">
+        <Image
+          src={gameBanner(game)}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center opacity-35"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-void via-void/55 to-void/20" />
         <div
           className="absolute -top-32 left-1/4 h-80 w-[36rem] rounded-full opacity-25 blur-[110px]"
           style={{ backgroundColor: game.accent }}

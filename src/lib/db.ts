@@ -45,6 +45,11 @@ export function getDb(): DatabaseSync {
       );
       CREATE INDEX IF NOT EXISTS idx_chat_room ON chat_messages (room, id);
     `);
+    try {
+      db.exec("ALTER TABLE users ADD COLUMN pro INTEGER NOT NULL DEFAULT 0");
+    } catch {
+      /* column already exists */
+    }
     globalThis.__fragforgeDb = db;
   }
   return globalThis.__fragforgeDb;
