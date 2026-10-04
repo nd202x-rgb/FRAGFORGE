@@ -16,6 +16,7 @@ export async function POST(req: Request) {
     "line_items[0][price_data][product_data][name]": "FragForge GO PRO",
     "line_items[0][price_data][product_data][description]":
       "Pro video courses, VOD reviews and ranked climb programs for every game.",
+    "line_items[0][price_data][product_data][tax_code]": "txcd_10000000",
     "line_items[0][quantity]": "1",
     client_reference_id: String(user.id),
     customer_email: user.email,
