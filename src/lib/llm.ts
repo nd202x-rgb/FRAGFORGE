@@ -34,11 +34,11 @@ function providerConfig(key: string) {
       model: process.env.OPENAI_MODEL ?? "gpt-4o-mini",
     };
   }
-  // Google AI Studio keys start with "AIza"
-  if (key.startsWith("AIza")) {
+  // Google AI Studio / Gemini keys: classic "AIza..." and newer "AQ."
+  if (key.startsWith("AIza") || key.startsWith("AQ.")) {
     return {
       base: "https://generativelanguage.googleapis.com/v1beta/openai",
-      model: "gemini-2.0-flash",
+      model: "gemini-3.8-flash",
     };
   }
   return { base: "https://api.openai.com/v1", model: "gpt-4o-mini" };
@@ -55,6 +55,25 @@ export async function llmReply(
   const key = process.env.OPENAI_API_KEY;
   if (!key) return null;
   const { base, model } = providerConfig(key);
+  // Free-tier LLMs rate-limit under load — retry transient failures.
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const result = await callModel(base, model, key, query, retrievalContext);
+    if (result !== "RETRY" && result !== "FATAL") return result;
+    if (result === "FATAL") return null;
+    await new Promise((r) => setTimeout(r, 1200 * (attempt + 1)));
+  }
+  return null;
+}
+
+const RETRYABLE = new Set([429, 500, 502, 503, 504]);
+
+async function callModel(
+  base: string,
+  model: string,
+  key: string,
+  query: string,
+  retrievalContext: string,
+): Promise<string | "RETRY" | "FATAL"> {
   try {
     const res = await fetch(`${base}/chat/completions`, {
       method: "POST",
@@ -77,15 +96,15 @@ export async function llmReply(
     });
     if (!res.ok) {
       console.error("llm error", res.status, await res.text().catch(() => ""));
-      return null;
+      return RETRYABLE.has(res.status) ? "RETRY" : "FATAL";
     }
     const json = (await res.json()) as {
       choices?: { message?: { content?: string } }[];
     };
     const text = json.choices?.[0]?.message?.content?.trim();
-    return text || null;
+    return text || "FATAL";
   } catch (e) {
     console.error("llm call failed", e);
-    return null;
+    return "RETRY"; // network blips are worth retrying
   }
 }
