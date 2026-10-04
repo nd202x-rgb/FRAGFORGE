@@ -42,7 +42,7 @@ export default function GearPage() {
                   <div className="panel panel-hover flex h-full flex-col overflow-hidden">
                     <div className="relative aspect-[3/2] w-full overflow-hidden">
                       <Image
-                        src={`/gear/${cat.id}.jpg`}
+                        src={`/gear/${cat.id}-${i}.jpg`}
                         alt={`${cat.title} — ${item.name}`}
                         fill
                         sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"

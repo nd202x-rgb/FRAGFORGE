@@ -39,6 +39,14 @@ export function SquadClient({
   const [error, setError] = useState<string | null>(null);
   const lastId = useRef(0);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+  const pinnedToBottom = useRef(true);
+
+  function onScroll() {
+    const el = listRef.current;
+    if (!el) return;
+    pinnedToBottom.current = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
+  }
 
   const poll = useCallback(async () => {
     try {
@@ -61,8 +69,12 @@ export function SquadClient({
   }, [poll]);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages.length]);
+    const last = messages[messages.length - 1];
+    const ownMessage = !!username && last?.username === username;
+    if (pinnedToBottom.current || ownMessage) {
+      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, username]);
 
   async function send(e: React.FormEvent) {
     e.preventDefault();
@@ -96,7 +108,11 @@ export function SquadClient({
           </h2>
           {username && <span className="chip">as {username}</span>}
         </div>
-        <div className="flex-1 space-y-4 overflow-y-auto px-5 py-4">
+        <div
+          ref={listRef}
+          onScroll={onScroll}
+          className="flex-1 space-y-4 overflow-y-auto px-5 py-4"
+        >
           {messages.length === 0 && (
             <div className="flex h-full flex-col items-center justify-center text-center">
               <span
