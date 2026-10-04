@@ -44,9 +44,34 @@ export function getDb(): DatabaseSync {
         created_at TEXT NOT NULL DEFAULT (datetime('now'))
       );
       CREATE INDEX IF NOT EXISTS idx_chat_room ON chat_messages (room, id);
+      CREATE TABLE IF NOT EXISTS dm_messages (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        sender_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        recipient_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        body TEXT NOT NULL,
+        created_at TEXT NOT NULL DEFAULT (datetime('now'))
+      );
+      CREATE INDEX IF NOT EXISTS idx_dm_pair ON dm_messages (sender_id, recipient_id, id);
+      CREATE INDEX IF NOT EXISTS idx_dm_recipient ON dm_messages (recipient_id, id);
+      CREATE TABLE IF NOT EXISTS dm_reads (
+        reader_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        peer_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        last_read_id INTEGER NOT NULL DEFAULT 0,
+        PRIMARY KEY (reader_id, peer_id)
+      );
     `);
     try {
       db.exec("ALTER TABLE users ADD COLUMN pro INTEGER NOT NULL DEFAULT 0");
+    } catch {
+      /* column already exists */
+    }
+    try {
+      db.exec("ALTER TABLE users ADD COLUMN avatar TEXT");
+    } catch {
+      /* column already exists */
+    }
+    try {
+      db.exec("ALTER TABLE users ADD COLUMN bio TEXT NOT NULL DEFAULT ''");
     } catch {
       /* column already exists */
     }

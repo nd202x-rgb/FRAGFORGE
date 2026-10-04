@@ -8,6 +8,7 @@ interface ChatMsg {
   username: string;
   body: string;
   created_at: string;
+  avatar: string | null;
 }
 
 const AVATAR_COLORS = ["#22d3ee", "#8b5cf6", "#f43f8e", "#f5b942", "#4ade80", "#f97316", "#38bdf8", "#e879f9"];
@@ -131,18 +132,39 @@ export function SquadClient({
             const color = avatarColor(m.username);
             return (
               <div key={m.id} className={`flex items-end gap-2.5 ${mine ? "flex-row-reverse" : ""}`}>
-                <span
-                  className="flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-full text-xs font-black text-void"
-                  style={{ backgroundColor: mine ? accent : color }}
-                  title={m.username}
-                >
-                  {m.username.slice(0, 1).toUpperCase()}
-                </span>
+                {m.avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- user-uploaded file with cache-bust query
+                  <img
+                    src={m.avatar}
+                    alt={m.username}
+                    title={m.username}
+                    className="h-8 w-8 shrink-0 select-none rounded-full object-cover"
+                  />
+                ) : (
+                  <span
+                    className="flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-full text-xs font-black text-void"
+                    style={{ backgroundColor: mine ? accent : color }}
+                    title={m.username}
+                  >
+                    {m.username.slice(0, 1).toUpperCase()}
+                  </span>
+                )}
                 <div className={`max-w-[75%] ${mine ? "text-right" : ""}`}>
                   <p className="mb-1 px-1 text-[11px] text-faint">
-                    <span className="font-bold" style={{ color: mine ? accent : color }}>
-                      {mine ? "You" : m.username}
-                    </span>
+                    {mine ? (
+                      <span className="font-bold" style={{ color: accent }}>
+                        You
+                      </span>
+                    ) : (
+                      <Link
+                        href={`/messages/${encodeURIComponent(m.username)}`}
+                        className="font-bold hover:underline"
+                        style={{ color }}
+                        title={`Private message ${m.username}`}
+                      >
+                        {m.username}
+                      </Link>
+                    )}
                     {" · "}
                     {fmtTime(m.created_at)}
                   </p>

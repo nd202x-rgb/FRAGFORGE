@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-export function UserMenu({ username }: { username: string }) {
+export function UserMenu({ username, avatar }: { username: string; avatar: string | null }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -29,13 +29,32 @@ export function UserMenu({ username }: { username: string }) {
         onClick={() => setOpen((v) => !v)}
         className="flex items-center gap-2 rounded-lg border border-edge bg-panel-2 px-3 py-1.5 text-sm font-semibold transition-colors hover:border-edge-bright"
       >
-        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-neon to-vio text-xs font-black text-void">
-          {username.slice(0, 1).toUpperCase()}
-        </span>
+        {avatar ? (
+          // eslint-disable-next-line @next/next/no-img-element -- user-uploaded file with cache-bust query
+          <img src={avatar} alt="" className="h-6 w-6 rounded-full object-cover" />
+        ) : (
+          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-neon to-vio text-xs font-black text-void">
+            {username.slice(0, 1).toUpperCase()}
+          </span>
+        )}
         {username}
       </button>
       {open && (
         <div className="absolute right-0 mt-2 w-44 overflow-hidden rounded-xl border border-edge bg-panel-2 shadow-2xl">
+          <Link
+            href="/profile"
+            onClick={() => setOpen(false)}
+            className="block px-4 py-2.5 text-sm text-mist hover:bg-white/5 hover:text-white"
+          >
+            My profile
+          </Link>
+          <Link
+            href="/messages"
+            onClick={() => setOpen(false)}
+            className="block px-4 py-2.5 text-sm text-mist hover:bg-white/5 hover:text-white"
+          >
+            Messages
+          </Link>
           <Link
             href="/connect"
             onClick={() => setOpen(false)}

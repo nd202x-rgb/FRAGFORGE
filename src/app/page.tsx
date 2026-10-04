@@ -69,7 +69,7 @@ export default function Home() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
                 href="/games"
-                className="rounded-lg bg-neon px-6 py-3 font-bold text-void transition-all hover:shadow-[0_0_28px_rgba(34,211,238,0.5)]"
+                className="rounded-lg bg-neon px-6 py-3 font-bold text-void transition-all hover:shadow-[0_0_28px_rgba(255,122,26,0.5)]"
               >
                 Browse game guides
               </Link>
@@ -166,7 +166,7 @@ export default function Home() {
             </p>
             <Link
               href="/register"
-              className="relative mt-7 inline-block rounded-lg bg-neon px-8 py-3 font-bold text-void transition-all hover:shadow-[0_0_28px_rgba(34,211,238,0.5)]"
+              className="relative mt-7 inline-block rounded-lg bg-neon px-8 py-3 font-bold text-void transition-all hover:shadow-[0_0_28px_rgba(255,122,26,0.5)]"
             >
               Create free account
             </Link>

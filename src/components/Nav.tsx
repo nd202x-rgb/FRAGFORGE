@@ -38,7 +38,7 @@ export async function Nav() {
         </nav>
         <div className="flex items-center gap-2">
           {user ? (
-            <UserMenu username={user.username} />
+            <UserMenu username={user.username} avatar={user.avatar} />
           ) : (
             <>
               <Link
@@ -49,7 +49,7 @@ export async function Nav() {
               </Link>
               <Link
                 href="/register"
-                className="rounded-lg bg-neon px-4 py-2 text-sm font-bold text-void transition-all hover:shadow-[0_0_20px_rgba(34,211,238,0.45)]"
+                className="rounded-lg bg-neon px-4 py-2 text-sm font-bold text-void transition-all hover:shadow-[0_0_20px_rgba(255,122,26,0.45)]"
               >
                 Join free
               </Link>
