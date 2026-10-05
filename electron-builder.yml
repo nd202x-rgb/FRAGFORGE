@@ -1,0 +1,22 @@
+appId: com.fragforge.app
+productName: FragForge
+copyright: ND202
+directories:
+  output: release
+files:
+  - electron/main.js
+  - package.json
+extraResources:
+  - from: dist-app
+    to: app
+  - from: electron/config.json
+    to: config.json
+win:
+  target: nsis
+  icon: public/logo-mark.png
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  shortcutName: FragForge
+  createDesktopShortcut: true
+  createStartMenuShortcut: true

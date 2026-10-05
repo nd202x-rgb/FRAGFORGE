@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     if (file.size > MAX_AVATAR_BYTES) {
       return NextResponse.json({ error: "Image must be under 3 MB" }, { status: 400 });
     }
-    const dir = path.join(process.cwd(), "data", "uploads", "avatars");
+    const dir = path.join(process.env.FRAGFORGE_DATA_DIR ?? process.cwd(), "data", "uploads", "avatars");
     mkdirSync(dir, { recursive: true });
     const filename = `u${user.id}.${ext}`;
     writeFileSync(path.join(dir, filename), Buffer.from(await file.arrayBuffer()));

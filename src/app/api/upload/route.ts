@@ -39,7 +39,7 @@ export async function POST(req: Request) {
   if (file.size > MAX_BYTES) {
     return NextResponse.json({ error: "File must be under 25 MB" }, { status: 400 });
   }
-  const dir = path.join(process.cwd(), "data", "uploads", "chat");
+  const dir = path.join(process.env.FRAGFORGE_DATA_DIR ?? process.cwd(), "data", "uploads", "chat");
   mkdirSync(dir, { recursive: true });
   const filename = `c${user.id}-${Date.now()}.${ext}`;
   writeFileSync(path.join(dir, filename), Buffer.from(await file.arrayBuffer()));

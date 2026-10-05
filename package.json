@@ -2,11 +2,14 @@
   "name": "fragforge",
   "version": "0.1.0",
   "private": true,
+  "main": "electron/main.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "app:prepare": "npm run build && node electron/prepare.mjs",
+    "app:pack": "electron-builder --win --config electron-builder.yml"
   },
   "dependencies": {
     "framer-motion": "^14.0.0",
@@ -21,6 +24,8 @@
     "@types/node": "^26.6.4",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "electron": "^44.5.1",
+    "electron-builder": "^26.15.3",
     "eslint": "^9",
     "eslint-config-next": "16.3.8",
     "tailwindcss": "^4",

@@ -26,7 +26,7 @@ export async function GET(
   if (!match) {
     return new NextResponse("Not found", { status: 404 });
   }
-  const file = path.join(process.cwd(), "data", "uploads", "chat", name);
+  const file = path.join(process.env.FRAGFORGE_DATA_DIR ?? process.cwd(), "data", "uploads", "chat", name);
   try {
     const data = readFileSync(file);
     return new NextResponse(new Uint8Array(data), {

@@ -38,122 +38,57 @@ const FEATURES = [
   },
 ];
 
-const APPS = [
-  { icon: "🎮", label: "Games", href: "/games", color: "#ff7a1a" },
-  { icon: "💬", label: "Squads", href: "/squads", color: "#38bdf8" },
-  { icon: "👥", label: "Groups", href: "/groups", color: "#8b5cf6" },
-  { icon: "⭐", label: "GO PRO", href: "/gopro", color: "#fbbf24" },
-  { icon: "🖱", label: "Gear", href: "/gear", color: "#4ade80" },
-  { icon: "▶", label: "Media", href: "/media", color: "#f43f5e" },
-  { icon: "🌐", label: "Browse", href: "/browse", color: "#22d3ee" },
-  { icon: "🕹", label: "Emulators", href: "/emulators", color: "#a78bfa" },
-  { icon: "🔗", label: "Connect", href: "/connect", color: "#5865f2" },
-  { icon: "◉", label: "Profile", href: "/profile", color: "#f472b6" },
-  { icon: "✉", label: "Messages", href: "/messages", color: "#34d399" },
-  { icon: "🤖", label: "FORGE AI", href: "/games", color: "#fb923c" },
-];
-
-const DOCK = [APPS[0], APPS[1], APPS[5], APPS[6]];
-
-function AppIcon({ app, big = false }: { app: (typeof APPS)[number]; big?: boolean }) {
-  return (
-    <Link href={app.href} className="group flex flex-col items-center gap-1.5">
-      <span
-        className={`flex items-center justify-center rounded-[22%] font-bold shadow-lg transition-transform group-hover:scale-110 ${
-          big ? "h-14 w-14 text-xl" : "h-12 w-12 text-lg"
-        }`}
-        style={{
-          background: `linear-gradient(145deg, ${app.color}, ${app.color}88)`,
-          boxShadow: `0 6px 18px ${app.color}44`,
-        }}
-      >
-        {app.icon}
-      </span>
-      <span className="text-[10px] font-semibold text-white/90">{app.label}</span>
-    </Link>
-  );
-}
-
 export default function Home() {
   return (
     <div>
-      {/* App-launcher hero */}
-      <section className="relative overflow-hidden px-4 pb-20 pt-20 sm:px-6">
+      {/* Hero */}
+      <section className="relative overflow-hidden px-4 pb-24 pt-24 text-center sm:px-6">
         <div className="bg-grid absolute inset-0 -z-10" />
         <div className="absolute -top-32 left-1/2 -z-10 h-96 w-[42rem] -translate-x-1/2 rounded-full bg-vio/25 blur-[120px]" />
+        <div className="absolute -bottom-40 left-1/4 -z-10 h-80 w-80 rounded-full bg-neon/15 blur-[110px]" />
         <div className="scanline absolute inset-0 -z-10 overflow-hidden" />
-        <div className="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-2">
-          <div className="text-center lg:text-left">
-            <Reveal>
-              <span className="chip">the gaming app · 23 games · 200+ techniques</span>
-            </Reveal>
-            <Reveal delay={0.08}>
-              <h1 className="mt-6 text-5xl font-black leading-[1.05] tracking-tight sm:text-6xl">
-                YOUR GAMING.
-                <span className="block bg-gradient-to-r from-white via-neon to-orange-600 bg-clip-text text-transparent">
-                  ONE APP.
-                </span>
-              </h1>
-            </Reveal>
-            <Reveal delay={0.16}>
-              <p className="mx-auto mt-6 max-w-xl text-lg text-mist lg:mx-0">
-                Guides, squad rooms, group chats, a media corner, an in-app
-                browser and real gear picks — everything a player needs, in one
-                installable app.
-              </p>
-            </Reveal>
-            <Reveal delay={0.24}>
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
-                <Link
-                  href="/games"
-                  className="rounded-lg bg-neon px-6 py-3 font-bold text-void transition-all hover:shadow-[0_0_28px_rgba(255,122,26,0.5)]"
-                >
-                  Open the app
-                </Link>
-                <Link
-                  href="/register"
-                  className="rounded-lg border border-edge-bright px-6 py-3 font-bold text-white transition-colors hover:bg-white/5"
-                >
-                  Join free
-                </Link>
-              </div>
-              <p className="mt-4 text-xs text-faint">
-                📲 Installs like a native app — in your browser: menu → “Add to
-                Home Screen” (mobile) or the install icon in the address bar
-                (desktop).
-              </p>
-            </Reveal>
+        <Reveal>
+          <span className="chip">pro-gaming academy · 23 games · 200+ techniques</span>
+        </Reveal>
+        <Reveal delay={0.08}>
+          <h1 className="mx-auto mt-6 max-w-4xl text-5xl font-black leading-[1.05] tracking-tight sm:text-7xl">
+            FORGE YOUR
+            <span className="block bg-gradient-to-r from-white via-neon to-orange-600 bg-clip-text text-transparent">
+              EDGE.
+            </span>
+          </h1>
+        </Reveal>
+        <Reveal delay={0.16}>
+          <p className="mx-auto mt-6 max-w-xl text-lg text-mist">
+            Real techniques, drills and meta breakdowns for every major
+            competitive game — plus squad rooms, group chats, a media corner
+            and gear the pros actually use.
+          </p>
+        </Reveal>
+        <Reveal delay={0.24}>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/games"
+              className="rounded-lg bg-neon px-6 py-3 font-bold text-void transition-all hover:shadow-[0_0_28px_rgba(255,122,26,0.5)]"
+            >
+              Browse game guides
+            </Link>
+            <Link
+              href="/register"
+              className="rounded-lg border border-edge-bright px-6 py-3 font-bold text-white transition-colors hover:bg-white/5"
+            >
+              Join free
+            </Link>
           </div>
-
-          {/* Phone mockup — a working app launcher */}
-          <Reveal delay={0.2} className="mx-auto">
-            <div className="relative w-[19rem] rounded-[3rem] border-[10px] border-zinc-800 bg-black shadow-[0_0_80px_rgba(255,122,26,0.15)]">
-              <div className="absolute left-1/2 top-2.5 z-10 h-6 w-24 -translate-x-1/2 rounded-full bg-black" />
-              <div className="flex items-center justify-between px-8 pb-1 pt-4 text-[10px] font-bold text-white/80">
-                <span>9:41</span>
-                <span className="flex items-center gap-1">
-                  <span>▂▅▆</span>
-                  <span>🔋</span>
-                </span>
-              </div>
-              <div className="relative h-[34rem] overflow-hidden rounded-b-[2.4rem] bg-gradient-to-b from-[#14101f] via-[#1a0f14] to-[#0a0a0f] px-5 pt-8">
-                <p className="text-center text-xs font-bold text-white/60">
-                  FRAG<span className="text-neon">FORGE</span>
-                </p>
-                <div className="mt-6 grid grid-cols-4 gap-x-2 gap-y-5">
-                  {APPS.map((a) => (
-                    <AppIcon key={a.label} app={a} />
-                  ))}
-                </div>
-                <div className="absolute inset-x-4 bottom-4 flex justify-around rounded-3xl border border-white/10 bg-white/10 px-4 py-3 backdrop-blur-md">
-                  {DOCK.map((a) => (
-                    <AppIcon key={a.label} app={a} big />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </Reveal>
-        </div>
+        </Reveal>
+        <Reveal delay={0.32}>
+          <div className="mx-auto mt-12 flex max-w-2xl flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-faint">
+            <span>⚔ 200+ pro techniques</span>
+            <span>💬 Live squad rooms</span>
+            <span>⭐ GO PRO video courses</span>
+            <span>🖥 Gear & spec guides</span>
+          </div>
+        </Reveal>
       </section>
 
       {/* Marquee */}
