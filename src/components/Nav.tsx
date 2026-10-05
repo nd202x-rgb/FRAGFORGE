@@ -7,6 +7,8 @@ const LINKS = [
   { href: "/games", label: "Games" },
   { href: "/squads", label: "Squads" },
   { href: "/groups", label: "Groups" },
+  { href: "/media", label: "Media" },
+  { href: "/browse", label: "Browse" },
   { href: "/gopro", label: "GO PRO" },
   { href: "/gear", label: "Gear" },
   { href: "/emulators", label: "Emulators" },

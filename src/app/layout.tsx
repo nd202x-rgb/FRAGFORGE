@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
@@ -22,6 +22,17 @@ export const metadata: Metadata = {
   },
   description:
     "Pro-level techniques, PvP guides, drills, gear picks and emulators for every popular competitive game.",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "FragForge",
+    statusBarStyle: "black-translucent",
+  },
+  icons: { apple: "/logo-mark.png" },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#ff7a1a",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

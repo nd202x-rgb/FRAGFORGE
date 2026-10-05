@@ -1,0 +1,13 @@
+{
+  "name": "FragForge — Pro Gaming Academy",
+  "short_name": "FragForge",
+  "description": "Pro-level techniques, PvP guides, squad rooms and gear picks for every popular competitive game.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#ff7a1a",
+  "icons": [
+    { "src": "/logo-mark.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/logo-mark.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
