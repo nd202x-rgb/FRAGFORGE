@@ -328,7 +328,16 @@ app.whenReady().then(async () => {
     win.loadFile(path.join(__dirname, "launcher.html"));
   });
 
+  // Always-online startup: join the shared server straight away (Discord-style);
+  // the launcher is only the fallback when it's unreachable.
   win.loadFile(path.join(__dirname, "launcher.html"));
+  (async () => {
+    if (await probe(ONLINE_SERVER, 6000)) {
+      mode = "join";
+      saveState({ mode: "join", serverUrl: ONLINE_SERVER });
+      openGame(win, ONLINE_SERVER);
+    }
+  })();
 });
 
 app.on("window-all-closed", () => {

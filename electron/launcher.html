@@ -41,8 +41,7 @@
     <div class="logo">FRAG<span>FORGE</span></div>
     <p class="sub">Pro-gaming academy — guides, squads, gear & AI coach</p>
 
-    <button class="online" id="onlineBtn">🌐 FragForge Online — everyone chats here</button>
-    <button class="solo" id="play">▶ Play on this PC</button>
+    <button class="online" id="onlineBtn">🌐 Enter FragForge</button>
     <button class="join" id="hostBtn">🏠 Host + play (friends join me)</button>
     <button class="join" id="joinBtn">🔗 Join a friend's game</button>
 
@@ -64,12 +63,11 @@
   const api = window.ffLauncher;
   const $ = (id) => document.getElementById(id);
 
-  $("play").onclick = () => api.play(false);
   $("onlineBtn").onclick = async () => {
     $("onlineBtn").textContent = "Connecting…";
     const r = await api.joinOnline();
     if (!r || !r.ok) {
-      $("onlineBtn").textContent = "🌐 FragForge Online — server unreachable, retry";
+      $("onlineBtn").textContent = "🌐 Server unreachable — tap to retry";
     }
   };
 
