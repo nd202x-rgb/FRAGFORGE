@@ -57,7 +57,10 @@ export function FindPlayers({
           <p className="mt-1 text-sm text-mist">
             Search anyone on FragForge and start a private chat.{" "}
             {!isPro && (
-              <span className="text-gold">Messaging is a GO PRO feature.</span>
+              <span className="text-gold">
+                Free members can chat with any PRO player — messaging free
+                players needs GO PRO.
+              </span>
             )}
           </p>
         </div>
@@ -116,16 +119,26 @@ export function FindPlayers({
                   <p className="mt-0.5 truncate text-xs text-faint">{p.bio}</p>
                 )}
               </div>
-              <Link
-                href={isPro ? `/messages/${encodeURIComponent(p.username)}` : "/gopro"}
-                className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-bold transition-transform hover:scale-105 ${
-                  isPro
-                    ? "bg-neon text-void"
-                    : "border border-gold/40 bg-gold/10 text-gold"
-                }`}
-              >
-                {isPro ? "Message" : "PRO 🔒"}
-              </Link>
+              {(() => {
+                const canMessage =
+                  isPro || p.pro === 1 || p.role === "owner";
+                return (
+                  <Link
+                    href={
+                      canMessage
+                        ? `/messages/${encodeURIComponent(p.username)}`
+                        : "/gopro"
+                    }
+                    className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-bold transition-transform hover:scale-105 ${
+                      canMessage
+                        ? "bg-neon text-void"
+                        : "border border-gold/40 bg-gold/10 text-gold"
+                    }`}
+                  >
+                    {canMessage ? "Message" : "PRO 🔒"}
+                  </Link>
+                );
+              })()}
             </div>
           ))}
         </div>

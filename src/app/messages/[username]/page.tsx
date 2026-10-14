@@ -22,7 +22,6 @@ export default async function DmPage({
 }) {
   const user = await getCurrentUser();
   if (!user) redirect("/login?next=/messages");
-  if (!hasProAccess(user)) return <ProGate />;
   const { username } = await params;
   const peer = getDb()
     .prepare("SELECT username, avatar, pro, role FROM users WHERE username = ? COLLATE NOCASE")
@@ -32,6 +31,8 @@ export default async function DmPage({
   if (!peer || peer.username.toLowerCase() === user.username.toLowerCase()) {
     redirect("/messages");
   }
+  const peerPro = peer.pro === 1 || peer.role === "owner";
+  if (!hasProAccess(user) && !peerPro) return <ProGate />;
   return (
     <DmClient
       peer={{ username: peer.username, avatar: peer.avatar, pro: peer.pro, role: peer.role }}

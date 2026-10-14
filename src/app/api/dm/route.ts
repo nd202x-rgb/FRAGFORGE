@@ -1,19 +1,13 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser, hasProAccess } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 
 // GET /api/dm — conversation list: every user I've exchanged messages with,
-// latest message first. GO PRO feature.
+// latest message first. Free users see conversations started by PRO members.
 export async function GET() {
   const user = await getCurrentUser();
   if (!user) {
     return NextResponse.json({ error: "Sign in required" }, { status: 401 });
-  }
-  if (!hasProAccess(user)) {
-    return NextResponse.json(
-      { error: "Private messages are a GO PRO feature", upgrade: true },
-      { status: 403 },
-    );
   }
   const rows = getDb()
     .prepare(
