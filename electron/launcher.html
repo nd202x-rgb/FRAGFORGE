@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>FragForge</title>
+<style>
+  * { box-sizing: border-box; margin: 0; font-family: "Segoe UI", system-ui, sans-serif; }
+  body {
+    height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(1200px 600px at 50% -10%, #2a1506, #0a0a0f 60%);
+    color: #fff;
+  }
+  .card { width: 420px; text-align: center; padding: 40px 32px; }
+  .logo { font-size: 34px; font-weight: 900; letter-spacing: 1px; }
+  .logo span { color: #ff7a1a; }
+  .sub { color: #9ca3af; margin-top: 8px; font-size: 14px; }
+  button {
+    width: 100%; margin-top: 14px; padding: 14px; border: 0; border-radius: 10px;
+    font-size: 15px; font-weight: 800; cursor: pointer;
+  }
+  .solo { background: #ff7a1a; color: #0a0a0f; }
+  .join { background: transparent; border: 1px solid #3f3f46; color: #fff; }
+  .join:hover { background: #ffffff10; }
+  .host-info { display: none; margin-top: 18px; text-align: left; font-size: 13px; color: #d4d4d8; }
+  .host-info code {
+    display: block; margin-top: 6px; padding: 8px 10px; border-radius: 8px;
+    background: #18181b; color: #ffb066; font-size: 13px; word-break: break-all;
+  }
+  #joinBox { display: none; margin-top: 14px; }
+  #joinBox input {
+    width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #3f3f46;
+    background: #18181b; color: #fff; font-size: 14px; outline: none;
+  }
+  #err { color: #f87171; font-size: 12px; margin-top: 8px; display: none; }
+  .foot { margin-top: 22px; font-size: 11px; color: #52525b; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">FRAG<span>FORGE</span></div>
+    <p class="sub">Pro-gaming academy — guides, squads, gear & AI coach</p>
+
+    <button class="solo" id="play">▶ Play on this PC</button>
+    <button class="join" id="hostBtn">🏠 Host + play (friends join me)</button>
+    <button class="join" id="joinBtn">🔗 Join a friend's game</button>
+
+    <div class="host-info" id="hostInfo"></div>
+
+    <div id="joinBox">
+      <input id="addr" placeholder="Friend's address, e.g. http://192.168.1.5:3478" />
+      <button class="solo" id="go">Connect</button>
+      <p id="err"></p>
+    </div>
+
+    <p class="foot">v0.1 — hosts share their address; friends join it. Saves your choice.</p>
+  </div>
+<script>
+  const api = window.ffLauncher;
+  const $ = (id) => document.getElementById(id);
+
+  $("play").onclick = () => api.play(false);
+  $("hostBtn").onclick = async () => {
+    const info = await api.hostInfo();
+    $("hostInfo").style.display = "block";
+    $("hostInfo").innerHTML =
+      "Share this address with friends — they enter it under <b>Join a friend's game</b>:"
+      + info.urls.map((u) => `<code>${u}</code>`).join("")
+      + "<p style='margin-top:8px'>Works instantly on the same Wi-Fi. Over the internet, forward port 3478 on your router to this PC.</p>";
+    api.play(true);
+  };
+  $("joinBtn").onclick = () => { $("joinBox").style.display = "block"; };
+  $("go").onclick = async () => {
+    $("err").style.display = "none";
+    let v = $("addr").value.trim();
+    if (!v) return;
+    if (!/^https?:\/\//i.test(v)) v = "http://" + v;
+    const res = await api.join(v);
+    if (!res.ok) {
+      $("err").textContent = "Couldn't reach that address — check it and that your friend pressed 'Host + play'.";
+      $("err").style.display = "block";
+    }
+  };
+</script>
+</body>
+</html>

@@ -5,6 +5,8 @@ directories:
   output: release
 files:
   - electron/main.js
+  - electron/preload.js
+  - electron/launcher.html
   - package.json
 extraResources:
   - from: dist-app
