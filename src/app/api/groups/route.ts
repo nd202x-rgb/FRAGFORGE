@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser, hasProAccess } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 
 const MAX_NAME = 40;
@@ -31,17 +31,11 @@ export async function GET() {
   return NextResponse.json({ groups: rows });
 }
 
-// POST /api/groups { name, members?: string[] } — create a friend group (GO PRO).
+// POST /api/groups { name, members?: string[] } — create a friend group (free for all).
 export async function POST(req: Request) {
   const user = await getCurrentUser();
   if (!user) {
     return NextResponse.json({ error: "Sign in required" }, { status: 401 });
-  }
-  if (!hasProAccess(user)) {
-    return NextResponse.json(
-      { error: "Creating groups is a GO PRO feature", upgrade: true },
-      { status: 403 },
-    );
   }
   const json = (await req.json().catch(() => null)) as {
     name?: string;

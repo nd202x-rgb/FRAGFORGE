@@ -21,7 +21,7 @@ interface FoundUser {
   role: string;
 }
 
-export function GroupsClient({ isPro }: { isPro: boolean }) {
+export function GroupsClient() {
   const [groups, setGroups] = useState<Group[]>([]);
   const [name, setName] = useState("");
   const [memberQ, setMemberQ] = useState("");
@@ -89,7 +89,7 @@ export function GroupsClient({ isPro }: { isPro: boolean }) {
       </h1>
       <p className="mt-3 max-w-xl text-mist">
         Private group chats for your crew — name it anything, add whoever you
-        like, share media. Creating groups is a GO PRO perk; anyone invited can chat.
+        like, share media. Free for everyone — create one and invite your crew.
       </p>
 
       {/* Create */}
@@ -107,22 +107,12 @@ export function GroupsClient({ isPro }: { isPro: boolean }) {
           />
           <button
             type="submit"
-            disabled={!name.trim() || creating || !isPro}
+            disabled={!name.trim() || creating}
             className="rounded-full bg-neon px-6 py-3 text-sm font-extrabold text-void transition-all hover:shadow-[0_0_20px_rgba(255,122,26,0.45)] disabled:opacity-40"
           >
             {creating ? "Creating…" : "Create"}
           </button>
         </div>
-        {!isPro && (
-          <p className="mt-3 text-sm text-gold">
-            Creating groups needs{" "}
-            <Link href="/gopro" className="font-bold underline">
-              GO PRO
-            </Link>{" "}
-            — but you can chat in any group you&rsquo;re added to.
-          </p>
-        )}
-
         {/* Member picker */}
         <input
           value={memberQ}
@@ -182,7 +172,7 @@ export function GroupsClient({ isPro }: { isPro: boolean }) {
         </h2>
         {groups.length === 0 ? (
           <p className="mt-4 text-sm text-faint">
-            No groups yet — create one above{!isPro ? " (needs GO PRO)" : ""}, or ask
+            No groups yet — create one above, or ask
             a friend to add you to theirs.
           </p>
         ) : (
