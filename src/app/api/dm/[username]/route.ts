@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser, hasProAccess } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 
 const MAX_BODY = 500;
@@ -19,13 +19,6 @@ async function findPeer(username: string): Promise<PeerRow | undefined> {
     .get(decodeURIComponent(username)) as PeerRow | undefined;
 }
 
-function proGate() {
-  return NextResponse.json(
-    { error: "Private messages are a GO PRO feature", upgrade: true },
-    { status: 403 },
-  );
-}
-
 // GET /api/dm/<username>?after=<id> — thread messages, marks the conversation read.
 export async function GET(
   req: Request,
@@ -40,9 +33,6 @@ export async function GET(
   if (!peer || peer.id === user.id) {
     return NextResponse.json({ error: "Unknown user" }, { status: 404 });
   }
-  // free users can chat with any PRO member; free↔free stays gated
-  const peerPro = peer.pro === 1 || peer.role === "owner";
-  if (!hasProAccess(user) && !peerPro) return proGate();
   const after = Number(new URL(req.url).searchParams.get("after") ?? "0") || 0;
   const db = getDb();
   const rows = db
@@ -95,8 +85,6 @@ export async function POST(
   if (!peer || peer.id === user.id) {
     return NextResponse.json({ error: "Unknown user" }, { status: 404 });
   }
-  const peerPro = peer.pro === 1 || peer.role === "owner";
-  if (!hasProAccess(user) && !peerPro) return proGate();
   const json = (await req.json().catch(() => null)) as {
     body?: string;
     media_url?: string;

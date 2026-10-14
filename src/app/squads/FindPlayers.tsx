@@ -22,10 +22,8 @@ function avatarColor(name: string): string {
 
 export function FindPlayers({
   signedIn,
-  isPro,
 }: {
   signedIn: boolean;
-  isPro: boolean;
 }) {
   const [q, setQ] = useState("");
   const [players, setPlayers] = useState<Player[]>([]);
@@ -55,13 +53,8 @@ export function FindPlayers({
             Find <span className="text-neon">players</span>
           </h2>
           <p className="mt-1 text-sm text-mist">
-            Search anyone on FragForge and start a private chat.{" "}
-            {!isPro && (
-              <span className="text-gold">
-                Free members can chat with any PRO player — messaging free
-                players needs GO PRO.
-              </span>
-            )}
+            Search anyone on FragForge and start a private chat — free for
+            every member.
           </p>
         </div>
         <Link
@@ -119,26 +112,12 @@ export function FindPlayers({
                   <p className="mt-0.5 truncate text-xs text-faint">{p.bio}</p>
                 )}
               </div>
-              {(() => {
-                const canMessage =
-                  isPro || p.pro === 1 || p.role === "owner";
-                return (
-                  <Link
-                    href={
-                      canMessage
-                        ? `/messages/${encodeURIComponent(p.username)}`
-                        : "/gopro"
-                    }
-                    className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-bold transition-transform hover:scale-105 ${
-                      canMessage
-                        ? "bg-neon text-void"
-                        : "border border-gold/40 bg-gold/10 text-gold"
-                    }`}
-                  >
-                    {canMessage ? "Message" : "PRO 🔒"}
-                  </Link>
-                );
-              })()}
+              <Link
+                href={`/messages/${encodeURIComponent(p.username)}`}
+                className="shrink-0 rounded-lg bg-neon px-3 py-1.5 text-xs font-bold text-void transition-transform hover:scale-105"
+              >
+                Message
+              </Link>
             </div>
           ))}
         </div>

@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
-import { getCurrentUser, hasProAccess } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 import { getDb } from "@/lib/db";
-import { ProGate } from "../ProGate";
 import { DmClient } from "./DmClient";
 
 export const dynamic = "force-dynamic";
@@ -31,8 +30,6 @@ export default async function DmPage({
   if (!peer || peer.username.toLowerCase() === user.username.toLowerCase()) {
     redirect("/messages");
   }
-  const peerPro = peer.pro === 1 || peer.role === "owner";
-  if (!hasProAccess(user) && !peerPro) return <ProGate />;
   return (
     <DmClient
       peer={{ username: peer.username, avatar: peer.avatar, pro: peer.pro, role: peer.role }}

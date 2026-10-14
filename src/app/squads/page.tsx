@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { GAMES } from "@/lib/games";
-import { getCurrentUser, hasProAccess } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 import { Reveal } from "@/components/Reveal";
 import { FindPlayers } from "./FindPlayers";
 
@@ -27,7 +27,7 @@ export default async function SquadsPage() {
         </p>
       </Reveal>
 
-      <FindPlayers signedIn={!!user} isPro={!!user && hasProAccess(user)} />
+      <FindPlayers signedIn={!!user} />
 
       {/* Global lounge — open to every member */}
       <Reveal delay={0.05}>
