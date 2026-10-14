@@ -8,6 +8,7 @@ files:
   - electron/preload.js
   - electron/launcher.html
   - package.json
+afterPack: electron/afterpack.cjs
 extraResources:
   - from: dist-app
     to: app
