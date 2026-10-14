@@ -6,6 +6,7 @@ contextBridge.exposeInMainWorld("ffLauncher", {
   open: () => ipcRenderer.invoke("ff:open"),
   tunnelStatus: () => ipcRenderer.invoke("ff:tunnel-status"),
   join: (url) => ipcRenderer.invoke("ff:join", url),
+  joinOnline: () => ipcRenderer.invoke("ff:join-online"),
   hostInfo: () => ipcRenderer.invoke("ff:host-info"),
   launcher: () => ipcRenderer.invoke("ff:launcher"),
 });

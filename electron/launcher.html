@@ -19,6 +19,7 @@
     font-size: 15px; font-weight: 800; cursor: pointer;
   }
   .solo { background: #ff7a1a; color: #0a0a0f; }
+  .online { background: linear-gradient(135deg,#ff7a1a,#ffb84d); color:#0a0a0f; font-weight:700; }
   .join { background: transparent; border: 1px solid #3f3f46; color: #fff; }
   .join:hover { background: #ffffff10; }
   .host-info { display: none; margin-top: 18px; text-align: left; font-size: 13px; color: #d4d4d8; }
@@ -40,6 +41,7 @@
     <div class="logo">FRAG<span>FORGE</span></div>
     <p class="sub">Pro-gaming academy — guides, squads, gear & AI coach</p>
 
+    <button class="online" id="onlineBtn">🌐 FragForge Online — everyone chats here</button>
     <button class="solo" id="play">▶ Play on this PC</button>
     <button class="join" id="hostBtn">🏠 Host + play (friends join me)</button>
     <button class="join" id="joinBtn">🔗 Join a friend's game</button>
@@ -63,6 +65,13 @@
   const $ = (id) => document.getElementById(id);
 
   $("play").onclick = () => api.play(false);
+  $("onlineBtn").onclick = async () => {
+    $("onlineBtn").textContent = "Connecting…";
+    const r = await api.joinOnline();
+    if (!r || !r.ok) {
+      $("onlineBtn").textContent = "🌐 FragForge Online — server unreachable, retry";
+    }
+  };
 
   function esc(s) { return s.replace(/</g, "&lt;"); }
 

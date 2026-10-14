@@ -11,6 +11,8 @@ const BIND = "0.0.0.0"; // reachable by friends on the network
 const LOCAL = `http://127.0.0.1:${PORT}`;
 
 let serverProc = null;
+const ONLINE_SERVER = "https://fragforge-production.up.railway.app";
+
 let mode = "local"; // "local" | "join"
 
 // --- cloudflared quick tunnel: public URL for cross-internet hosting ---
@@ -294,6 +296,15 @@ app.whenReady().then(async () => {
 
   ipcMain.handle("ff:open", () => {
     openGame(win, LOCAL);
+    return { ok: true };
+  });
+
+  ipcMain.handle("ff:join-online", async () => {
+    const ok = await probe(ONLINE_SERVER);
+    if (!ok) return { ok: false };
+    mode = "join";
+    saveState({ mode: "join", serverUrl: ONLINE_SERVER });
+    openGame(win, ONLINE_SERVER);
     return { ok: true };
   });
 

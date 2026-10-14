@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FragForge — Pro Gaming Academy for Windows</title>
+<meta name="description" content="Download FragForge for Windows: technique guides for 23 competitive games, squad voice rooms, FORGE AI coach, GO PRO courses and gear picks.">
+<link rel="icon" href="/dl/logo-mark.png">
+<style>
+  :root {
+    --void: #0a0a0f;
+    --panel: #12121a;
+    --edge: rgba(255,255,255,.08);
+    --neon: #ff6a00;
+    --vio: #8b5cf6;
+    --mist: #b8b8c4;
+    --faint: #77778c;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: var(--void);
+    color: #ececf1;
+    overflow-x: hidden;
+  }
+  .grid-bg {
+    position: fixed; inset: 0; z-index: -2;
+    background-image:
+      linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size: 52px 52px;
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, black, transparent 80%);
+  }
+  .glow {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background: radial-gradient(ellipse 55% 35% at 50% -5%, rgba(255,106,0,.16), transparent);
+  }
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 5%;
+    background: rgba(10,10,15,.75);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--edge);
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 19px; letter-spacing: .5px; text-decoration: none; color: #fff; }
+  .brand img { width: 34px; height: 34px; }
+  .brand span { color: var(--neon); }
+  .nav-dl {
+    background: var(--neon); color: #fff; text-decoration: none;
+    font-weight: 600; font-size: 14px; padding: 9px 20px; border-radius: 9px;
+    transition: box-shadow .15s;
+  }
+  .nav-dl:hover { box-shadow: 0 0 22px rgba(255,106,0,.55); }
+
+  section { padding: 72px 5%; max-width: 1160px; margin: 0 auto; }
+  .hero { text-align: center; padding-top: 84px; }
+  .byline {
+    font-size: 15px; font-weight: 700; letter-spacing: 5px;
+    color: #fff; margin-bottom: 22px; text-transform: uppercase;
+    text-shadow: 0 0 24px rgba(255,106,0,.45);
+  }
+  .byline::after {
+    content: ""; display: block; width: 64px; height: 2px;
+    background: var(--neon); margin: 12px auto 0; border-radius: 2px;
+    box-shadow: 0 0 14px rgba(255,106,0,.8);
+  }
+  .badge {
+    display: inline-block; font-size: 12.5px; letter-spacing: 1.4px; text-transform: uppercase;
+    color: var(--neon); border: 1px solid rgba(255,106,0,.35); border-radius: 999px;
+    padding: 6px 16px; margin-bottom: 26px; background: rgba(255,106,0,.07);
+  }
+  h1 { font-size: clamp(44px, 7vw, 78px); line-height: .98; font-weight: 800; letter-spacing: -1px; }
+  h1 .fire {
+    background: linear-gradient(180deg, #ffb347, var(--neon) 70%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-shadow: 0 0 42px rgba(255,106,0,.35);
+  }
+  .hero p { color: var(--mist); font-size: 18px; max-width: 620px; margin: 22px auto 34px; line-height: 1.55; }
+  .cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--neon); color: #fff; font-size: 18px; font-weight: 700;
+    padding: 17px 42px; border-radius: 13px; text-decoration: none;
+    box-shadow: 0 10px 34px rgba(255,106,0,.4);
+    transition: transform .13s, box-shadow .13s;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 16px 44px rgba(255,106,0,.55); }
+  .btn.ghost {
+    background: transparent; border: 1px solid var(--edge); color: var(--mist);
+    box-shadow: none; font-weight: 600;
+  }
+  .btn.ghost:hover { border-color: rgba(255,106,0,.5); color: #fff; }
+  .meta { color: var(--faint); font-size: 13px; margin-top: 16px; }
+
+  .stats { display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; margin-top: 54px; }
+  .stat { text-align: center; }
+  .stat b { display: block; font-size: 30px; color: var(--neon); }
+  .stat span { font-size: 13px; color: var(--faint); letter-spacing: .6px; text-transform: uppercase; }
+
+  .shot {
+    border: 1px solid var(--edge); border-radius: 16px; overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,.6), 0 0 60px rgba(255,106,0,.07);
+    margin-top: 56px;
+  }
+  .shot img { display: block; width: 100%; }
+
+  h2 { font-size: clamp(28px, 4vw, 42px); font-weight: 800; letter-spacing: -.5px; margin-bottom: 12px; }
+  h2 em { font-style: normal; color: var(--neon); }
+  .lede { color: var(--mist); font-size: 16.5px; max-width: 640px; margin-bottom: 44px; line-height: 1.55; }
+
+  .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 18px; }
+  .feat {
+    border: 1px solid var(--edge); border-radius: 14px; padding: 24px 22px;
+    background: linear-gradient(160deg, rgba(255,255,255,.035), rgba(255,255,255,.012));
+    transition: border-color .15s, transform .15s;
+  }
+  .feat:hover { border-color: rgba(255,106,0,.45); transform: translateY(-3px); }
+  .feat .ic { font-size: 26px; margin-bottom: 12px; }
+  .feat h3 { font-size: 17px; margin-bottom: 7px; }
+  .feat p { font-size: 14px; color: var(--mist); line-height: 1.55; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .8px; color: #0a0a0f; background: #ffb347; border-radius: 5px; padding: 2px 7px; margin-left: 6px; vertical-align: 2px; }
+
+  .showcase { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .showcase figure { border: 1px solid var(--edge); border-radius: 14px; overflow: hidden; background: var(--panel); }
+  .showcase img { display: block; width: 100%; }
+  .showcase figcaption { padding: 14px 18px; font-size: 14px; color: var(--mist); border-top: 1px solid var(--edge); }
+  .showcase figure:first-child { grid-column: 1 / -1; }
+
+  .dl-card {
+    border: 1px solid rgba(255,106,0,.35); border-radius: 22px;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,106,0,.12), transparent),
+      var(--panel);
+    padding: 56px 40px; text-align: center;
+  }
+  .steps {
+    display: inline-block; text-align: left; margin: 30px auto 0;
+    font-size: 14.5px; color: var(--mist); line-height: 2.0;
+    border: 1px solid var(--edge); border-radius: 12px; padding: 18px 26px;
+    background: rgba(0,0,0,.3);
+  }
+  .steps b { color: #fff; }
+  .warn { color: #ffb347; font-size: 13.5px; margin-top: 18px; }
+
+  footer {
+    border-top: 1px solid var(--edge); margin-top: 40px;
+    padding: 34px 5%; display: flex; flex-wrap: wrap; gap: 14px;
+    align-items: center; justify-content: space-between;
+    color: var(--faint); font-size: 13px;
+  }
+  footer .fb { display: flex; align-items: center; gap: 9px; font-weight: 700; color: #fff; }
+  footer img { width: 26px; height: 26px; }
+  @media (max-width: 720px) { .showcase { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="glow"></div>
+
+<nav>
+  <a class="brand" href="#"><img src="/dl/logo-mark.png" alt="FragForge">FRAG<span>FORGE</span></a>
+  <a class="nav-dl" href="#download">Download</a>
+</nav>
+
+<section class="hero">
+  <p class="byline">FRAGFORGE BY ND202</p>
+  <span class="badge">Pro-gaming academy &middot; desktop app</span>
+  <h1>FORGE YOUR<br><span class="fire">EDGE.</span></h1>
+  <p>Real techniques, drills and meta breakdowns for every major competitive game — plus squad rooms, group chats, a media corner, an AI coach and gear the pros actually use. All in one native Windows app.</p>
+  <div class="cta-row">
+    <a class="btn" href="https://files.catbox.moe/1cmc6a.zip">&#8681;&nbsp; Download for Windows</a>
+    <a class="btn ghost" href="#features">See what's inside</a>
+  </div>
+  <p class="meta">v0.1.0 &middot; Windows 10/11 64-bit &middot; ~187 MB &middot; free account included</p>
+  <div class="stats">
+    <div class="stat"><b>23</b><span>game guides</span></div>
+    <div class="stat"><b>200+</b><span>pro techniques</span></div>
+    <div class="stat"><b>10</b><span>squad voice rooms</span></div>
+    <div class="stat"><b>AI</b><span>FORGE coach</span></div>
+  </div>
+  <div class="shot"><img src="/dl/shots/home.png" alt="FragForge app — Forge Your Edge home screen"></div>
+</section>
+
+<section id="features">
+  <h2>Everything a grinder needs, <em>in one app</em></h2>
+  <p class="lede">No more alt-tabbing between wikis, Discord and YouTube. FragForge packs your improvement stack into a single desktop client.</p>
+  <div class="features">
+    <div class="feat"><div class="ic">&#9876;</div><h3>23 Game Guides</h3><p>Valorant, CS2, League, Dota 2, Fortnite, Apex, Overwatch 2, Rocket League, Warzone, Elden Ring and more — deep technique guides with real pro settings, drills and counter-play.</p></div>
+    <div class="feat"><div class="ic">&#128172;</div><h3>Squad Voice Rooms</h3><p>One room per game plus a Global Lounge. Text chat, voice and video built in — find a squad for your next match without leaving the app.</p></div>
+    <div class="feat"><div class="ic">&#129302;</div><h3>FORGE AI Coach</h3><p>A real AI assistant living in the corner of the app. Ask for aim routines, matchup tips or what to drill — get a coach-style answer on the spot.</p></div>
+    <div class="feat"><div class="ic">&#11088;</div><h3>GO PRO Courses<span class="tag">PRO</span></h3><p>Structured video courses from real coaches — Woohoojin (Valorant), voo (CS2), Coach Curtis (League) — plus VOD reviews and ranked climb roadmaps. $9/mo via Stripe checkout.</p></div>
+    <div class="feat"><div class="ic">&#128187;</div><h3>Gear &amp; Specs</h3><p>Real mice, keyboards, monitors and GPUs the pros use — with live price bands, seller links and per-game system requirements.</p></div>
+    <div class="feat"><div class="ic">&#127909;</div><h3>Media Corner</h3><p>YouTube, Shorts, TikTok and Instagram embeds in-page — clutch clips, patch breakdowns and creator content without opening a browser tab.</p></div>
+    <div class="feat"><div class="ic">&#128101;</div><h3>Friends, Groups &amp; DMs</h3><p>Build friend groups, run private chats and DMs — now free for everyone. Host your own game over the internet and friends join with a link.</p></div>
+    <div class="feat"><div class="ic">&#127760;</div><h3>Built-in Browser</h3><p>A private-tabbed browser inside the app plus account linking for Discord, Steam, Riot, Epic, Battle.net, Xbox and PSN.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Inside the <em>forge</em></h2>
+  <p class="lede">Real screens from the app — dark, fast, and built for focus.</p>
+  <div class="showcase">
+    <figure>
+      <img src="/dl/shots/games.png" alt="Game guide grid — every game, every technique">
+      <figcaption>Every game. Every technique. — pick a title, get straight to what wins.</figcaption>
+    </figure>
+    <figure>
+      <img src="/dl/shots/squads.png" alt="Squad rooms — chat, voice and video per game">
+      <figcaption>Squad rooms with built-in voice &amp; video, plus a Global Lounge for everyone.</figcaption>
+    </figure>
+    <figure>
+      <img src="/dl/shots/gopro.png" alt="GO PRO tier — structured video courses">
+      <figcaption>GO PRO — coach-led video courses, VOD reviews and ranked climb roadmaps.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="download">
+  <div class="dl-card">
+    <img src="/dl/logo-mark.png" alt="" style="width:72px;height:72px;margin-bottom:16px">
+    <h2>Ready to <em>rank up</em>?</h2>
+    <p class="lede" style="margin:10px auto 26px">Grab the Windows installer and you're in the lobby in under a minute.</p>
+    <a class="btn" href="https://files.catbox.moe/1cmc6a.zip">&#8681;&nbsp; Download FragForge Setup 0.1.0</a>
+    <p class="meta">.zip &middot; ~187 MB &middot; Windows 10/11 (64-bit)</p>
+    <div class="steps">
+      <b>Install in 4 steps:</b><br>
+      1. Download the .zip<br>
+      2. Extract it (right-click &rarr; Extract All)<br>
+      3. Run <b>FragForge Setup 0.1.0.exe</b><br>
+      4. Pick an install folder — a FragForge shortcut lands on your desktop
+    </div>
+    <p class="warn">Windows SmartScreen may warn &ldquo;Unknown publisher&rdquo; — click <b>More info &rarr; Run anyway</b>.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="fb"><img src="/dl/logo-mark.png" alt="">FRAGFORGE BY ND202</div>
+  <span>Unofficial demo guide hub — not affiliated with any game publisher.</span>
+</footer>
+</body>
+</html>
