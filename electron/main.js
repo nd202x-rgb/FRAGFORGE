@@ -1,8 +1,9 @@
 const { app, BrowserWindow, shell, ipcMain } = require("electron");
-const { spawn } = require("child_process");
+const { spawn, execFile } = require("child_process");
 const path = require("path");
 const fs = require("fs");
 const http = require("http");
+const https = require("https");
 const os = require("os");
 
 const PORT = 3478;
@@ -11,6 +12,109 @@ const LOCAL = `http://127.0.0.1:${PORT}`;
 
 let serverProc = null;
 let mode = "local"; // "local" | "join"
+
+// --- cloudflared quick tunnel: public URL for cross-internet hosting ---
+const TUNNEL_DIR = () => path.join(app.getPath("userData"), "bin");
+const TUNNEL_BIN = () =>
+  path.join(TUNNEL_DIR(), process.platform === "win32" ? "cloudflared.exe" : "cloudflared");
+const TUNNEL_DOWNLOAD = {
+  win32: "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.exe",
+  linux: "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64",
+};
+let tunnelProc = null;
+let tunnelUrl = null;
+let tunnelState = "idle"; // idle | downloading | starting | ready | error
+let tunnelErr = null;
+
+function downloadFile(url, dest, depth = 0) {
+  return new Promise((resolve, reject) => {
+    https
+      .get(url, (res) => {
+        if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location && depth < 5) {
+          res.resume();
+          resolve(downloadFile(res.headers.location, dest, depth + 1));
+          return;
+        }
+        if (res.statusCode !== 200) {
+          res.resume();
+          reject(new Error(`download failed: ${res.statusCode}`));
+          return;
+        }
+        const out = fs.createWriteStream(dest);
+        res.pipe(out);
+        out.on("finish", () => out.close(resolve));
+        out.on("error", reject);
+      })
+      .on("error", reject);
+  });
+}
+
+async function ensureTunnelBin() {
+  const bin = TUNNEL_BIN();
+  if (fs.existsSync(bin)) return bin;
+  fs.mkdirSync(TUNNEL_DIR(), { recursive: true });
+  if (process.platform === "darwin") {
+    const tgz = path.join(TUNNEL_DIR(), "cloudflared.tgz");
+    await downloadFile(
+      "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-darwin-amd64.tgz",
+      tgz,
+    );
+    await new Promise((res, rej) =>
+      execFile("tar", ["-xzf", tgz, "-C", TUNNEL_DIR()], (e) => (e ? rej(e) : res())),
+    );
+    fs.unlinkSync(tgz);
+  } else {
+    const url = TUNNEL_DOWNLOAD[process.platform];
+    if (!url) throw new Error(`no tunnel binary for ${process.platform}`);
+    await downloadFile(url, bin);
+    if (process.platform !== "win32") fs.chmodSync(bin, 0o755);
+  }
+  return bin;
+}
+
+function startTunnel() {
+  if (tunnelProc || tunnelState === "downloading") return;
+  tunnelState = "downloading";
+  tunnelErr = null;
+  ensureTunnelBin()
+    .then((bin) => {
+      tunnelState = "starting";
+      tunnelProc = spawn(bin, ["tunnel", "--url", LOCAL, "--no-autoupdate"], {
+        env: { ...process.env, NO_AUTOUPDATE: "true", TUNNEL_METRICS: "127.0.0.1:0" },
+      });
+      const onData = (d) => {
+        const m = String(d).match(/https:\/\/[-a-z0-9]+\.trycloudflare\.com/);
+        if (m && !tunnelUrl) {
+          tunnelUrl = m[0];
+          tunnelState = "ready";
+        }
+      };
+      tunnelProc.stdout.on("data", onData);
+      tunnelProc.stderr.on("data", onData);
+      tunnelProc.on("exit", () => {
+        tunnelProc = null;
+        if (tunnelState !== "ready") tunnelState = "error";
+        tunnelErr = tunnelErr ?? "tunnel exited";
+      });
+      tunnelProc.on("error", (e) => {
+        tunnelProc = null;
+        tunnelState = "error";
+        tunnelErr = String(e);
+      });
+    })
+    .catch((e) => {
+      tunnelState = "error";
+      tunnelErr = String(e);
+    });
+}
+
+function stopTunnel() {
+  if (tunnelProc) tunnelProc.kill();
+  tunnelProc = null;
+  tunnelUrl = null;
+  tunnelState = "idle";
+}
+// ----------------------------------------------------------------------
 
 function statePath() {
   return path.join(app.getPath("userData"), "launcher-state.json");
@@ -60,7 +164,8 @@ function waitForServer(url, timeoutMs = 30000) {
 
 function probe(url, timeoutMs = 4000) {
   return new Promise((resolve) => {
-    const req = http.get(url, { timeout: timeoutMs }, (res) => {
+    const mod = url.startsWith("https") ? https : http;
+    const req = mod.get(url, { timeout: timeoutMs }, (res) => {
       res.resume();
       resolve(res.statusCode < 500);
     });
@@ -162,11 +267,32 @@ app.whenReady().then(async () => {
 
   ipcMain.handle("ff:host-info", () => ({ urls: lanUrls() }));
 
+  ipcMain.handle("ff:tunnel-status", () => ({
+    state: tunnelState,
+    url: tunnelUrl,
+    err: tunnelErr,
+  }));
+
   ipcMain.handle("ff:play", async (_e, host) => {
     mode = "local";
     saveState({ mode: "local" });
     await startLocalServer();
     await waitForServer(LOCAL);
+    openGame(win, LOCAL);
+    return { ok: true };
+  });
+
+  // host: start server + internet tunnel but stay on the share screen
+  ipcMain.handle("ff:host", async () => {
+    mode = "local";
+    saveState({ mode: "local" });
+    await startLocalServer();
+    const up = await waitForServer(LOCAL);
+    startTunnel();
+    return { ok: up };
+  });
+
+  ipcMain.handle("ff:open", () => {
     openGame(win, LOCAL);
     return { ok: true };
   });
@@ -185,6 +311,7 @@ app.whenReady().then(async () => {
   ipcMain.handle("ff:launcher", () => {
     mode = "local";
     saveState({ mode: "local" });
+    stopTunnel();
     win.setSize(560, 560);
     win.center();
     win.loadFile(path.join(__dirname, "launcher.html"));
@@ -195,9 +322,11 @@ app.whenReady().then(async () => {
 
 app.on("window-all-closed", () => {
   if (serverProc) serverProc.kill();
+  if (tunnelProc) tunnelProc.kill();
   app.quit();
 });
 
 app.on("quit", () => {
   if (serverProc) serverProc.kill();
+  if (tunnelProc) tunnelProc.kill();
 });

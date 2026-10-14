@@ -45,6 +45,10 @@
     <button class="join" id="joinBtn">🔗 Join a friend's game</button>
 
     <div class="host-info" id="hostInfo"></div>
+    <div id="openBox" style="display:none">
+      <button class="solo" id="openGame">Open FragForge →</button>
+      <p class="sub" style="font-size:11px">Keep this app running — closing it stops your hosted game.</p>
+    </div>
 
     <div id="joinBox">
       <input id="addr" placeholder="Friend's address, e.g. http://192.168.1.5:3478" />
@@ -59,15 +63,40 @@
   const $ = (id) => document.getElementById(id);
 
   $("play").onclick = () => api.play(false);
-  $("hostBtn").onclick = async () => {
+
+  function esc(s) { return s.replace(/</g, "&lt;"); }
+
+  async function refreshHostInfo() {
     const info = await api.hostInfo();
+    const t = await api.tunnelStatus();
+    let html =
+      "<b>Any Wi-Fi / internet</b> — friends join with this address:"
+      + (t.url
+        ? `<code>${esc(t.url)}</code>`
+        : `<code>⏳ ${t.state === "downloading" ? "first-time setup (~30s)…" : "getting your public address…"}</code>`)
+      + "<b style='margin-top:10px;display:block'>Same Wi-Fi only</b>:"
+      + info.urls.map((u) => `<code>${esc(u)}</code>`).join("");
+    if (t.state === "error") {
+      html += `<p style="margin-top:8px;color:#f87171">Internet hosting failed (${esc(t.err || "tunnel error")}) — same-Wi-Fi address still works.</p>`;
+    }
+    $("hostInfo").innerHTML = html;
+    return t.state === "ready" || t.state === "error";
+  }
+
+  $("hostBtn").onclick = async () => {
     $("hostInfo").style.display = "block";
-    $("hostInfo").innerHTML =
-      "Share this address with friends — they enter it under <b>Join a friend's game</b>:"
-      + info.urls.map((u) => `<code>${u}</code>`).join("")
-      + "<p style='margin-top:8px'>Works instantly on the same Wi-Fi. Over the internet, forward port 3478 on your router to this PC.</p>";
-    api.play(true);
+    $("openBox").style.display = "block";
+    $("hostInfo").innerHTML = "<code>Starting your game server…</code>";
+    await api.host();
+    const poll = async () => {
+      const done = await refreshHostInfo();
+      if (!done) setTimeout(poll, 1500);
+    };
+    poll();
+    // keep refreshing so the URL updates if it arrives late
+    setInterval(refreshHostInfo, 4000);
   };
+  $("openGame").onclick = () => api.open();
   $("joinBtn").onclick = () => { $("joinBox").style.display = "block"; };
   $("go").onclick = async () => {
     $("err").style.display = "none";
